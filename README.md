@@ -11,7 +11,6 @@ FoundationLibrary currently includes reusable components such as:
 - Generic repositories
 - Generic services
 - Generic interfaces
-- Generic relationships
 - Common validation components
 - Shared abstractions
 - Reusable base classes
@@ -37,8 +36,6 @@ FoundationLibrary
 │   ├── Service.vb
 │   └── ...
 │
-├── Relationships
-│   └── ...
 │
 └── Validation
     └── ...

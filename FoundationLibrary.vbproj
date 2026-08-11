@@ -81,7 +81,7 @@
     <Compile Include="Interfaces\IService.vb" />
     <Compile Include="Interfaces\IValMsg.vb" />
     <Compile Include="Interfaces\Keys.vb" />
-    <Compile Include="ValMsg.vb" />
+    <Compile Include="Validations\ValMsg.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
