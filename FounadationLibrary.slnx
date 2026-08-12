@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="FoundationLibrary.Test/FoundationLibrary.Test.vbproj" Id="382ceb81-ec2a-4ca9-ba37-0b508991abfe" />
   <Project Path="FoundationLibrary.vbproj" Id="fe63a7aa-9dfa-40ca-9c23-abb9c444881d" />
 </Solution>

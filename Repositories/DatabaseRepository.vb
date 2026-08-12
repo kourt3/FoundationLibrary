@@ -214,20 +214,21 @@ Again:
         End Function
 
         Public Function Exist(Of TCreteria)(Creteria As TCreteria) As Boolean Implements IRepository(Of Tkey, TEntity).Exist
-            Dim Entity As New List(Of TEntity)
             Dim DT As New DataTable
             Database.TableDbOLe(Database.SelectDB(Table), DT)
             For i = 0 To DT.Rows.Count - 1
-                Entity.Add(ConvertEntity(DT(i)))
-            Next
-            For Each entiL In Entity
-                If Match(entiL, Creteria) Then Return True
+                If Match(ConvertEntity(DT(i)), Creteria) Then Return True
             Next
             Return False
         End Function
 
         Public Function Exist(Match As Predicate(Of TEntity)) As Boolean Implements IRepository(Of Tkey, TEntity).Exist
-            Throw New NotImplementedException()
+            Dim DT As New DataTable
+            Database.TableDbOLe(Database.SelectDB(Table), DT)
+            For i = 0 To DT.Rows.Count - 1
+                If Match(ConvertEntity(DT(i))) Then Return True
+            Next
+            Return False
         End Function
     End Class
 End Namespace
