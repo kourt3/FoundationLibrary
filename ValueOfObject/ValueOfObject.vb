@@ -1,7 +1,7 @@
 ﻿Imports FoundationLibrary.Interfaces.Keys
-Imports FoundationLibrary.ObjectOfValue.Bases
+Imports FoundationLibrary.ValueOfObject.Bases
 
-Namespace ObjectOfValue
+Namespace ValueOfObject
     Friend Class ColumnForDB(Of T)
         Implements Bases.IColumnsDB(Of T)
 
@@ -22,7 +22,7 @@ Namespace ObjectOfValue
     End Class
 
     Public Class ObectOfString
-        Implements ObjectOfValue.Bases.IObjectOfString
+        Implements ValueOfObject.Bases.IObjectOfString
 
         Private Str As String
         Public Property ColumnForDB As IColumnsDB(Of String) Implements IObjectOfString.ColumnForDB
@@ -65,7 +65,7 @@ Namespace ObjectOfValue
     End Class
 
     Public Class ObjectOfInteger
-        Implements ObjectOfValue.Bases.IObjectOfInteger
+        Implements ValueOfObject.Bases.IObjectOfInteger
 
         Public Property ColumnForDB As IColumnsDB(Of Integer) Implements IObjectOfInteger.ColumnForDB
         Public Property ValidStartEndDate As Boolean Implements IObjectOfInteger.ValidStartEndDate

@@ -81,8 +81,8 @@
     <Compile Include="Interfaces\IService.vb" />
     <Compile Include="Interfaces\IValMsg.vb" />
     <Compile Include="Interfaces\Keys.vb" />
-    <Compile Include="ObjectOfValue\IBaseValue.vb" />
-    <Compile Include="ObjectOfValue\ObectOfValues.vb" />
+    <Compile Include="ValueOfObject\IBaseValue.vb" />
+    <Compile Include="ValueOfObject\ValueOfObject.vb" />
     <Compile Include="Validations\ValMsg.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
