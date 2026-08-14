@@ -9,12 +9,13 @@ Namespace Services
     ''' O Service Επιστρέφει το γνησιο αντικειμενο του ENTITY.
     ''' Δεν ειναι και τοσο ασφαλες γιατι η κάθε αλλαγη δεν περναει απο τον Service.
     ''' οι αλλαγες μπορουν να γινουν και χωρις καποιο ελενχο απο το χρηστη εκτως αμα περασεις μεσο αντιγραφει στο service.
+    ''' <em>Για να λειτουργείσει ο Service και να επικοινωνηση με το Αποθετήριο θα πρέπει στην βάση Δεδομένων να υπαρχει το αντιστοιχο κλειδι <see cref="Interfaces.Keys.IHasPrimaryKey(Of T)"/></em>
     ''' </summary>
     ''' <typeparam name="TKey"></typeparam>
     ''' <typeparam name="TEntity"></typeparam>
     ''' <typeparam name="TRepository"></typeparam>
-    Public MustInherit Class ServiceE(Of TKey, TEntity As IHasPrimaryKey(Of TKey), TRepository As IRepository(Of TKey, TEntity))
-        Implements IService(Of TKey, TEntity)
+    Public MustInherit Class ServiceOfficialEntity(Of TKey, TEntity As IHasPrimaryKey(Of TKey), TRepository As IRepository(Of TKey, TEntity))
+        Implements IService(Of TEntity)
 
         Public Property Repository As TRepository
 
@@ -25,7 +26,7 @@ Namespace Services
         MustOverride Function ToEntity(Of DTO)(DTOLink As DTO) As TEntity
         MustOverride Function ToEntity(Of DTO)(DTOLink As DTO, Entity As TEntity) As TEntity
 
-        Overridable Function Exist(Ref As TEntity) As IValMsg(Of TEntity) Implements IService(Of TKey, TEntity).Exist
+        Overridable Function Exist(Ref As TEntity) As IValMsg(Of TEntity) Implements IService(Of TEntity).Exist
             Dim Result As New ValMsg.ValMsg(Of TEntity)
             Dim Entity As TEntity = Repository.Read_Item(Ref.PrimaryKey)
 
@@ -40,7 +41,7 @@ Namespace Services
             Result.Msg = "Βρέθηκε η Εγραφη!"
             Return Result
         End Function
-        Overridable Function Register(Of DTO)(RegisterDTO As DTO) As IValMsg(Of TEntity) Implements IService(Of TKey, TEntity).Register
+        Overridable Function Register(Of DTO)(RegisterDTO As DTO) As IValMsg(Of TEntity) Implements IService(Of TEntity).Register
             Dim Val As New ValMsg(Of TEntity)
 
             Dim Entity As TEntity = ToEntity(RegisterDTO)
@@ -55,7 +56,7 @@ Namespace Services
                 Return Val
             End If
         End Function
-        Overridable Function Change(Of DTO)(Ref As TEntity, ChangeDTO As DTO) As IValMsg Implements IService(Of TKey, TEntity).Change
+        Overridable Function Change(Of DTO)(Ref As TEntity, ChangeDTO As DTO) As IValMsg Implements IService(Of TEntity).Change
             Dim Val As New ValMsg.ValMsg
 
             Dim Entity As TEntity = Repository.Read_Item(Ref.PrimaryKey)
@@ -69,7 +70,7 @@ Namespace Services
             End If
             Return Val
         End Function
-        Overridable Function Remove(Ref As TEntity) As IValMsg Implements IService(Of TKey, TEntity).Remove
+        Overridable Function Remove(Ref As TEntity) As IValMsg Implements IService(Of TEntity).Remove
             Dim Val As New ValMsg.ValMsg
             If Repository.Delete(Ref.PrimaryKey) Then
                 Val.Success = True
@@ -80,7 +81,7 @@ Namespace Services
             End If
             Return Val
         End Function
-        Overridable Function Get_All() As IValMsg(Of List(Of TEntity)) Implements IService(Of TKey, TEntity).Get_All
+        Overridable Function Get_All() As IValMsg(Of List(Of TEntity)) Implements IService(Of TEntity).Get_All
             Dim Val As New ValMsg(Of List(Of TEntity))
             Val.Model = New List(Of TEntity)
             For Each Entity In Repository.Read_All
