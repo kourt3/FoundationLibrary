@@ -18,7 +18,7 @@ Namespace Services
         Implements Interfaces.Service.IService(Of TEntity, TModel)
 
         Public Delegate Function DelMemberizeClone(Entity As TEntity) As TModel
-        Private ReadOnly Property MemberizeClone As DelMemberizeClone
+        Public ReadOnly Property MemberizeClone As DelMemberizeClone
 
 
         MustOverride Function ToEntity(Of TDTO)(DTO As TDTO) As TEntity
