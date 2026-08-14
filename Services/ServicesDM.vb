@@ -30,7 +30,7 @@ Namespace Services
             MemberizeClone = AddressOfMemberizeClone
         End Sub
 
-        Public Function Exist(Ref As TEntity) As IValMsg(Of TModel) Implements IKeysServices(Of TEntity, TModel).Exist
+        Public Overridable Function Exist(Ref As TEntity) As IValMsg(Of TModel) Implements IKeysServices(Of TEntity, TModel).Exist
             Dim Result As New ValMsg(Of TModel)
             Dim Entity As TEntity = Repository.Read_Item(Ref.PrimaryKey)
 
@@ -46,7 +46,7 @@ Namespace Services
             Return Result
         End Function
 
-        Public Function Register(Of DTO)(RegisterDTO As DTO) As IValMsg(Of TModel) Implements IKeysServices(Of TEntity, TModel).Register
+        Public Overridable Function Register(Of DTO)(RegisterDTO As DTO) As IValMsg(Of TModel) Implements IKeysServices(Of TEntity, TModel).Register
             Dim Val As New ValMsg(Of TModel)
 
             Dim Entity As TEntity = ToEntity(RegisterDTO)
@@ -62,7 +62,7 @@ Namespace Services
             End If
         End Function
 
-        Public Function Change(Of DTO)(Ref As TEntity, ChangeDTO As DTO) As IValMsg Implements IKeysServices(Of TEntity, TModel).Change
+        Public Overridable Function Change(Of DTO)(Ref As TEntity, ChangeDTO As DTO) As IValMsg Implements IKeysServices(Of TEntity, TModel).Change
             Dim Val As New ValMsg.ValMsg
 
             Dim Entity As TEntity = Repository.Read_Item(Ref.PrimaryKey)
@@ -77,7 +77,7 @@ Namespace Services
             Return Val
         End Function
 
-        Public Function Remove(Ref As TEntity) As IValMsg Implements IKeysServices(Of TEntity, TModel).Remove
+        Public Overridable Function Remove(Ref As TEntity) As IValMsg Implements IKeysServices(Of TEntity, TModel).Remove
             Dim Val As New ValMsg.ValMsg
             If Repository.Delete(Ref.PrimaryKey) Then
                 Val.Success = True
@@ -89,7 +89,7 @@ Namespace Services
             Return Val
         End Function
 
-        Public Function Get_All() As IValMsg(Of List(Of TModel)) Implements IKeysServices(Of TEntity, TModel).Get_All
+        Public Overridable Function Get_All() As IValMsg(Of List(Of TModel)) Implements IKeysServices(Of TEntity, TModel).Get_All
             Dim Val As New ValMsg(Of List(Of TModel))
             Val.Model = New List(Of TModel)
             For Each Entity In Repository.Read_All
