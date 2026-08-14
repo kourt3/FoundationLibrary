@@ -17,7 +17,7 @@ Namespace Services
     Public MustInherit Class ServicesDiffModels(Of Tkey, TModel, TEntity As Interfaces.Keys.IHasPrimaryKey(Of Tkey), TRepository As Interfaces.Repository.IRepository(Of Tkey, TEntity))
         Implements Interfaces.Service.IService(Of TEntity, TModel)
 
-        Delegate Function DelMemberizeClone(Entity As TEntity) As TModel
+        Public Delegate Function DelMemberizeClone(Entity As TEntity) As TModel
         Private ReadOnly Property MemberizeClone As DelMemberizeClone
 
 
