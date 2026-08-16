@@ -1,4 +1,5 @@
-﻿Imports FoundationLibrary.Interfaces.Service
+﻿Imports FoundationLibrary.Interfaces.Repository
+Imports FoundationLibrary.Interfaces.Service
 Imports FoundationLibrary.Interfaces.ValMsg
 Imports FoundationLibrary.ValMsg
 
@@ -6,6 +7,10 @@ Namespace Services
 
     ''' <summary>
     ''' <Title>Service που να μπορεί να παραγει μεσο Mapper Διαφορα Models</Title>
+    ''' <Description><para>
+    ''' οταν εχεις φτιάξει Ενα Model που δεν περιεχει τα κλειδια απο το Project<br/>
+    ''' Και εχεις βάλει εναν εξωτερικο Mapper για να κανει την αντικατασταση Entity Στο δικο σου Model.
+    ''' </para></Description>
     ''' <para>
     ''' <em>Για να λειτουργείσει ο Service και να επικοινωνισει με το Αποθετήριο θα πρέπει στην βάση Δεδομένων να υπαρχει στο <typeparamref name="TEntity"/> το αντιστοιχο κλειδι <see cref="Interfaces.Keys.IHasPrimaryKey(Of T)"/></em>
     ''' </para>
@@ -20,12 +25,11 @@ Namespace Services
         Public Delegate Function DelMemberizeClone(Entity As TEntity) As TModel
         Public ReadOnly Property MemberizeClone As DelMemberizeClone
 
-
         MustOverride Function ToEntity(Of TDTO)(DTO As TDTO) As TEntity
         MustOverride Function ToEntity(Of TDTO)(DTO As TDTO, Entity As TEntity) As TEntity
         Public Repository As TRepository
 
-        Sub New(LinkRepository As TRepository, AddressOfMemberizeClone As DelMemberizeClone)
+        Sub New(LinkRepository As IRepository(Of Tkey, TEntity), AddressOfMemberizeClone As DelMemberizeClone)
             Repository = LinkRepository
             MemberizeClone = AddressOfMemberizeClone
         End Sub
