@@ -1,33 +1,52 @@
 ﻿Imports FoundationLibrary.Interfaces.Keys
-Imports FoundationLibrary.Interfaces.Repository
 Imports FoundationLibrary.Interfaces.Service
+Imports FoundationLibrary.Interfaces.Repository
 Imports FoundationLibrary.Interfaces.ValMsg
 Imports FoundationLibrary.ValMsg
-
 Namespace Services
+
     ''' <summary>
-    ''' O Service Επιστρέφει το γνησιο αντικειμενο του ENTITY.
-    ''' Δεν ειναι και τοσο ασφαλες γιατι η κάθε αλλαγη δεν περναει απο τον Service.
-    ''' οι αλλαγες μπορουν να γινουν και χωρις καποιο ελενχο απο το χρηστη εκτως αμα περασεις μεσο αντιγραφει στο service.
-    ''' <em>Για να λειτουργείσει ο Service και να επικοινωνηση με το Αποθετήριο θα πρέπει στην βάση Δεδομένων να υπαρχει το αντιστοιχο κλειδι <see cref="Interfaces.Keys.IHasPrimaryKey(Of T)"/></em>
+    '''<Title>O Services Επιστρέφει Entity του Project</Title>
+    '''
+    '''<para><em>
+    ''' Για να λειτουργείσει ο Service και να επικοινωνισει με το Αποθετήριο θα πρέπει στην βάση Δεδομένων να υπαρχει στο <typeparamref name="TEntity"/> το αντιστοιχο κλειδι <see cref="Interfaces.Keys.IHasPrimaryKey(Of T)"/>
+    ''' </em></para>
+    ''' 
+    ''' <important>
+    ''' <b>* Θα χρειαστεί να υλοποιησεις Την <see cref="MemberizeClone">MemberizeClone()</see></b> 
+    ''' </important>
+    ''' 
     ''' </summary>
-    ''' <typeparam name="TKey"></typeparam>
+    ''' <typeparam name="Tkey"></typeparam>
     ''' <typeparam name="TEntity"></typeparam>
     ''' <typeparam name="TRepository"></typeparam>
-    Public MustInherit Class ServiceOfficialEntity(Of TKey, TEntity As IHasPrimaryKey(Of TKey), TRepository As IRepository(Of TKey, TEntity))
+    Public MustInherit Class Service(Of Tkey, TEntity As IHasPrimaryKey(Of Tkey), TRepository As IRepository(Of Tkey, TEntity))
         Implements IService(Of TEntity)
 
         Public Property Repository As TRepository
 
-        Sub New(RepositoryLink As IRepository(Of TKey, TEntity))
-            Repository = RepositoryLink
+        Private AvailableClone As Boolean = True
+
+        ''' <summary>
+        ''' <para>Μπορεις να επιλέξεις ποιο Repository Θές να επιλέξεις, και αν θέλεις να υπαρχει καποιο αντιγραφο  του ENTITY</para>
+        ''' <para><em>Το Αντιγραφο του είναι απο προεπιλογη σε λειτουργεια, ειναι ποιο ασφαλες για να μην γίνονται λάθη στην database</em></para>
+        ''' </summary>
+        ''' <param name="ReposirotyLink">Επιλογή Repository</param>
+        ''' <param name="TakeCloneEntity">Επιλογή αντιγραφου Enity  (Default =  ON)</param>
+        Sub New(ReposirotyLink As TRepository, Optional TakeCloneEntity As Boolean = True)
+            Repository = ReposirotyLink
+            AvailableClone = TakeCloneEntity
         End Sub
-
-        MustOverride Function ToEntity(Of DTO)(DTOLink As DTO) As TEntity
-        MustOverride Function ToEntity(Of DTO)(DTOLink As DTO, Entity As TEntity) As TEntity
-
-        Overridable Function Exist(Ref As TEntity) As IValMsg(Of TEntity) Implements IService(Of TEntity).Exist
-            Dim Result As New ValMsg.ValMsg(Of TEntity)
+        ''' <summary>
+        ''' Δημιουργει ενα αντιγραφό του Entity
+        ''' </summary>
+        ''' <param name="Enity"></param>
+        ''' <returns></returns>
+        MustOverride Function MemberizeClone(Enity As TEntity) As TEntity
+        MustOverride Function ToEntity(Of TDTO)(DTO As TDTO) As TEntity
+        MustOverride Function ToEntity(Of TDTO)(DTO As TDTO, Entity As TEntity) As TEntity
+        Public Overridable Function Exist(Ref As TEntity) As IValMsg(Of TEntity) Implements IService(Of TEntity).Exist
+            Dim Result As New ValMsg(Of TEntity)
             Dim Entity As TEntity = Repository.Read_Item(Ref.PrimaryKey)
 
             If Entity Is Nothing Then
@@ -35,20 +54,28 @@ Namespace Services
                 Result.Msg = "Δεν βρέθηκε η Εγραφή!"
                 Return Result
             End If
-
-            Result.Model = Entity
+            If AvailableClone = True Then
+                Result.Model = MemberizeClone(Entity)
+            Else
+                Result.Model = Entity
+            End If
             Result.Success = True
             Result.Msg = "Βρέθηκε η Εγραφη!"
             Return Result
         End Function
-        Overridable Function Register(Of DTO)(RegisterDTO As DTO) As IValMsg(Of TEntity) Implements IService(Of TEntity).Register
+
+        Public Overridable Function Register(Of DTO)(RegisterDTO As DTO) As IValMsg(Of TEntity) Implements IService(Of TEntity).Register
             Dim Val As New ValMsg(Of TEntity)
 
             Dim Entity As TEntity = ToEntity(RegisterDTO)
             If Repository.Create(Entity) Then
                 Val.Success = True
                 Val.Msg = "Επιτυχης Εγραφή !"
-                Val.Model = Entity
+                If AvailableClone = True Then
+                    Val.Model = MemberizeClone(Entity)
+                Else
+                    Val.Model = Entity
+                End If
                 Return Val
             Else
                 Val.Success = False
@@ -56,7 +83,8 @@ Namespace Services
                 Return Val
             End If
         End Function
-        Overridable Function Change(Of DTO)(Ref As TEntity, ChangeDTO As DTO) As IValMsg Implements IService(Of TEntity).Change
+
+        Public Overridable Function Change(Of DTO)(Ref As TEntity, ChangeDTO As DTO) As IValMsg Implements IService(Of TEntity).Change
             Dim Val As New ValMsg.ValMsg
 
             Dim Entity As TEntity = Repository.Read_Item(Ref.PrimaryKey)
@@ -70,7 +98,8 @@ Namespace Services
             End If
             Return Val
         End Function
-        Overridable Function Remove(Ref As TEntity) As IValMsg Implements IService(Of TEntity).Remove
+
+        Public Overridable Function Remove(Ref As TEntity) As IValMsg Implements IService(Of TEntity).Remove
             Dim Val As New ValMsg.ValMsg
             If Repository.Delete(Ref.PrimaryKey) Then
                 Val.Success = True
@@ -81,11 +110,16 @@ Namespace Services
             End If
             Return Val
         End Function
-        Overridable Function Get_All() As IValMsg(Of List(Of TEntity)) Implements IService(Of TEntity).Get_All
+
+        Public Overridable Function Get_All() As IValMsg(Of List(Of TEntity)) Implements IService(Of TEntity).Get_All
             Dim Val As New ValMsg(Of List(Of TEntity))
             Val.Model = New List(Of TEntity)
             For Each Entity In Repository.Read_All
-                Val.Model.Add(Entity)
+                If AvailableClone = True Then
+                    Val.Model.Add(MemberizeClone(Entity))
+                Else
+                    Val.Model.Add(Entity)
+                End If
             Next
             If Val.Model.Count > 0 Then
                 Val.Success = True
@@ -96,7 +130,8 @@ Namespace Services
             End If
             Return Val
         End Function
-
     End Class
 End Namespace
+Public Class ServiceE
 
+End Class
