@@ -36,7 +36,7 @@ Namespace Services
 
 
         ' ================ Types For external models ================== 
-        Private AvailableExternalModel As Boolean = False
+        Public ReadOnly AvailableExternalModel As Boolean = False
         Public Delegate Function DelMemberizeClone(Entity As TEntity) As TModel
         Public ReadOnly Property ExternalModelMemberizeClone As DelMemberizeClone
         Sub New(LinkRepository As IRepository(Of TKey, TEntity), ExternalModelofMemeberizeCloneLink As DelMemberizeClone)

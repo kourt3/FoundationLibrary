@@ -25,7 +25,7 @@ Namespace Services
 
         Public Property Repository As TRepository
 
-        Private AvailableClone As Boolean = True
+        Public ReadOnly AvailableClone As Boolean = True
 
         ''' <summary>
         ''' <para>Μπορεις να επιλέξεις ποιο Repository Θές να επιλέξεις, και αν θέλεις να υπαρχει καποιο αντιγραφο  του ENTITY</para>
