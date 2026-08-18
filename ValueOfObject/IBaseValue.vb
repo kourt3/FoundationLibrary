@@ -27,10 +27,10 @@
         Inherits Interfaces.Keys.IHasValue(Of Integer)
         Property ColumnForDB As IColumnsDB(Of Integer)
 
-        Property ValidStartEndDate As Boolean
         Property StartNumber As Integer?
         Property EndNumber As Integer?
-        Property ValidNumberChars As Char()
+
+        Property ValidNumberChars As Integer()
 
     End Interface
 

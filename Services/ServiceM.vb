@@ -24,14 +24,30 @@ Namespace Services
     ''' <typeparam name="TModel">Το Model που κανει αντιγραφη απο το Entity</typeparam>
     ''' <typeparam name="TEntity">Το Αρχικο entity</typeparam>
     ''' <typeparam name="TRepository">To Αποθετήριο</typeparam>
-    Public MustInherit Class ServiceOfficialModels(Of TKey, TModel As IHasPrimaryKey(Of TKey), TEntity As IHasPrimaryKey(Of TKey), TRepository As IRepository(Of TKey, TEntity))
+    Public MustInherit Class ServiceModel(Of TKey, TModel, TEntity As IHasPrimaryKey(Of TKey), TRepository As IRepository(Of TKey, TEntity))
         Implements IService(Of TEntity, TModel)
 
         Public Property Repository As TRepository
 
         Sub New(RepositoryLink As IRepository(Of TKey, TEntity))
             Repository = RepositoryLink
+            AvailableExternalModel = False
         End Sub
+
+
+        ' ================ Types For external models ================== 
+        Public ReadOnly AvailableExternalModel As Boolean = False
+        Public Delegate Function DelMemberizeClone(Entity As TEntity) As TModel
+        Public ReadOnly Property ExternalModelMemberizeClone As DelMemberizeClone
+        Sub New(LinkRepository As IRepository(Of TKey, TEntity), ExternalModelofMemeberizeCloneLink As DelMemberizeClone)
+            Repository = LinkRepository
+            ExternalModelMemberizeClone = ExternalModelofMemeberizeCloneLink
+            AvailableExternalModel = True
+        End Sub
+        '==============================================================
+
+
+
 
         ''' <summary>
         ''' Δημιουργει ενα αντιγραφο του Entity και το περναει στο Model
@@ -51,8 +67,11 @@ Namespace Services
                 Result.Msg = "Δεν βρέθηκε η Εγραφή!"
                 Return Result
             End If
-
-            Result.Model = MemberizeClone(Entity)
+            If AvailableExternalModel = False Then
+                Result.Model = MemberizeClone(Entity)
+            Else
+                Result.Model = ExternalModelMemberizeClone.Invoke(Entity)
+            End If
             Result.Success = True
             Result.Msg = "Βρέθηκε η Εγραφη!"
             Return Result
@@ -64,7 +83,12 @@ Namespace Services
             If Repository.Create(Entity) Then
                 Val.Success = True
                 Val.Msg = "Επιτυχης Εγραφή !"
-                Val.Model = MemberizeClone(Entity)
+
+                If AvailableExternalModel = False Then
+                    Val.Model = MemberizeClone(Entity)
+                Else
+                    Val.Model = ExternalModelMemberizeClone.Invoke(Entity)
+                End If
                 Return Val
             Else
                 Val.Success = False
@@ -86,6 +110,7 @@ Namespace Services
             End If
             Return Val
         End Function
+
         Overridable Function Remove(Ref As TEntity) As IValMsg Implements IService(Of TEntity, TModel).Remove
             Dim Val As New ValMsg.ValMsg
             If Repository.Delete(Ref.PrimaryKey) Then
@@ -101,7 +126,11 @@ Namespace Services
             Dim Val As New ValMsg(Of List(Of TModel))
             Val.Model = New List(Of TModel)
             For Each Entity In Repository.Read_All
-                Val.Model.Add(MemberizeClone(Entity))
+                If AvailableExternalModel = False Then
+                    Val.Model.Add(MemberizeClone(Entity))
+                Else
+                    Val.Model.Add(ExternalModelMemberizeClone.Invoke(Entity))
+                End If
             Next
             If Val.Model.Count > 0 Then
                 Val.Success = True
