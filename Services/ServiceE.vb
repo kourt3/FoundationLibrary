@@ -33,7 +33,7 @@ Namespace Services
         ''' </summary>
         ''' <param name="ReposirotyLink">Επιλογή Repository</param>
         ''' <param name="TakeCloneEntity">Επιλογή αντιγραφου Enity  (Default =  ON)</param>
-        Sub New(ReposirotyLink As TRepository, Optional TakeCloneEntity As Boolean = True)
+        Sub New(ReposirotyLink As IRepository(Of Tkey, TEntity), Optional TakeCloneEntity As Boolean = True)
             Repository = ReposirotyLink
             AvailableClone = TakeCloneEntity
         End Sub
@@ -45,6 +45,8 @@ Namespace Services
         MustOverride Function MemberizeClone(Enity As TEntity) As TEntity
         MustOverride Function ToEntity(Of TDTO)(DTO As TDTO) As TEntity
         MustOverride Function ToEntity(Of TDTO)(DTO As TDTO, Entity As TEntity) As TEntity
+
+
         Public Overridable Function Exist(Ref As TEntity) As IValMsg(Of TEntity) Implements IService(Of TEntity).Exist
             Dim Result As New ValMsg(Of TEntity)
             Dim Entity As TEntity = Repository.Read_Item(Ref.PrimaryKey)
@@ -62,12 +64,15 @@ Namespace Services
             Result.Success = True
             Result.Msg = "Βρέθηκε η Εγραφη!"
             Return Result
+
         End Function
 
         Public Overridable Function Register(Of DTO)(RegisterDTO As DTO) As IValMsg(Of TEntity) Implements IService(Of TEntity).Register
             Dim Val As New ValMsg(Of TEntity)
 
+
             Dim Entity As TEntity = ToEntity(RegisterDTO)
+
             If Repository.Create(Entity) Then
                 Val.Success = True
                 Val.Msg = "Επιτυχης Εγραφή !"
@@ -89,6 +94,7 @@ Namespace Services
 
             Dim Entity As TEntity = Repository.Read_Item(Ref.PrimaryKey)
             Entity = ToEntity(ChangeDTO, Entity)
+
             If Repository.Update(Ref.PrimaryKey, Entity) Then
                 Val.Success = True
                 Val.Msg = "Επιτυχής Αλλαγή!"
@@ -101,6 +107,7 @@ Namespace Services
 
         Public Overridable Function Remove(Ref As TEntity) As IValMsg Implements IService(Of TEntity).Remove
             Dim Val As New ValMsg.ValMsg
+
             If Repository.Delete(Ref.PrimaryKey) Then
                 Val.Success = True
                 Val.Msg = "Επιτυχής Διαγραφής!"
@@ -130,8 +137,7 @@ Namespace Services
             End If
             Return Val
         End Function
+
     End Class
 End Namespace
-Public Class ServiceE
 
-End Class
