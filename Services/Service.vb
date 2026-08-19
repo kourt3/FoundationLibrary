@@ -24,7 +24,7 @@ Namespace Services
     ''' <typeparam name="TModel">Το Model που κανει αντιγραφη απο το Entity</typeparam>
     ''' <typeparam name="TEntity">Το Αρχικο entity</typeparam>
     ''' <typeparam name="TRepository">To Αποθετήριο</typeparam>
-    Public MustInherit Class ServiceModel(Of TKey, TModel, TEntity As IHasPrimaryKey(Of TKey), TRepository As IRepository(Of TKey, TEntity))
+    Public MustInherit Class Service(Of TKey, TModel, TEntity As IHasPrimaryKey(Of TKey), TRepository As IRepository(Of TKey, TEntity))
         Implements IService(Of TEntity, TModel)
 
         Public Property Repository As TRepository
@@ -55,8 +55,7 @@ Namespace Services
         ''' <param name="Entity">Data</param>
         ''' <returns>Model</returns>
         MustOverride Function MemberizeClone(Entity As TEntity) As TModel
-        MustOverride Function ToEntity(Of DTO)(DTOLink As DTO) As TEntity
-        MustOverride Function ToEntity(Of DTO)(DTOLink As DTO, Entity As TEntity) As TEntity
+        MustOverride Function ToEntity(Of DTO)(DTOLink As DTO, Optional Entity As TEntity = Nothing) As TEntity
 
         Overridable Function Exist(Ref As TEntity) As IValMsg(Of TModel) Implements IService(Of TEntity, TModel).Exist
             Dim Result As New ValMsg(Of TModel)

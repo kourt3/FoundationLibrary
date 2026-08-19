@@ -52,13 +52,4 @@ Namespace Interfaces.Service
     Public Interface IService(Of TData, TModel)
         Inherits IKeysServices(Of TData, TModel)
     End Interface
-
-    ''' <summary>
-    ''' <Title>Service που Επιστρέφει το ιδιο Entity</Title>
-    ''' <para>O service έλενχει αν επιτρέπεται να κανει καποια ενεργεια στην Βάση δεδομένων.</para>
-    ''' </summary>
-    ''' <typeparam name="TData">Data"/></typeparam>
-    Public Interface IService(Of TData)
-        Inherits IKeysServices(Of TData, TData)
-    End Interface
 End Namespace

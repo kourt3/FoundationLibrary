@@ -102,8 +102,7 @@
     </Compile>
     <Compile Include="Repositories\DatabaseRepository.vb" />
     <Compile Include="Repositories\Repository.vb" />
-    <Compile Include="Services\ServiceM.vb" />
-    <Compile Include="Services\ServiceE.vb" />
+    <Compile Include="Services\Service.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
