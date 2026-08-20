@@ -6,7 +6,7 @@ Namespace Interfaces.Service
     ''' </summary>
     ''' <typeparam name="TRef">Η αναγνώρηση του κλιδειου(PK)</typeparam>
     ''' <typeparam name="TReturn">Τι να επιστρέψει μεσο του <seealso cref="IServiceResult(Of TReturn)"/></typeparam>
-    Public Interface IKeysServices(Of TRef, TReturn)
+    Public Interface IService(Of TRef, TReturn)
         Delegate Function DelUseCase(Of DTO)(DTOLink As DTO) As ICaseResult
 
         ''' <summary>
@@ -43,17 +43,5 @@ Namespace Interfaces.Service
         Function Get_All() As IServiceResult(Of List(Of TReturn))
 
     End Interface
-
-
-    ''' <summary>
-    ''' <Title>Service που Επιστρέφει Model</Title>
-    ''' <para>O service έλενχει αν επιτρέπεται να κανει καποια ενεργεια στην Βάση δεδομένων.</para>
-    ''' </summary>
-    ''' <typeparam name="TModel">Model</typeparam>
-    ''' <typeparam name="TData">Data</typeparam>
-    Public Interface IService(Of TData, TModel)
-        Inherits IKeysServices(Of TData, TModel)
-    End Interface
-
 
 End Namespace

@@ -8,5 +8,7 @@ Namespace Repositories.Result
         Public Property Msg As String Implements IRepResult(Of TEntity).Msg
         Public Property Entity As TEntity Implements IRepResult(Of TEntity).Entity
     End Class
+
+
 End Namespace
 

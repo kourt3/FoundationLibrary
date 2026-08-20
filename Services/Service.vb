@@ -74,7 +74,7 @@ Namespace Services
             Result.Msg = "Βρέθηκε η Εγραφη!"
             Return Result
         End Function
-        Overridable Function Register(Of DTO)(RegisterDTO As DTO, Optional UseCaseLink As IKeysServices(Of TEntity, TModel).DelUseCase(Of DTO) = Nothing) As IServiceResult(Of TModel) Implements IService(Of TEntity, TModel).Register
+        Overridable Function Register(Of DTO)(RegisterDTO As DTO, Optional UseCaseLink As IService(Of TEntity, TModel).DelUseCase(Of DTO) = Nothing) As IServiceResult(Of TModel) Implements IService(Of TEntity, TModel).Register
             Dim Val As New ServiceResult(Of TModel)
 
             Dim ValDTO As Validation.ValMsg.ValMsg = ToValidation(Of DTO)(RegisterDTO)
@@ -112,7 +112,7 @@ Namespace Services
                 Return Val
             End If
         End Function
-        Overridable Function Change(Of DTO)(Ref As TEntity, ChangeDTO As DTO, Optional UseCaseLink As IKeysServices(Of TEntity, TModel).DelUseCase(Of DTO) = Nothing) As IServiceResult(Of TModel) Implements IService(Of TEntity, TModel).Change
+        Overridable Function Change(Of DTO)(Ref As TEntity, ChangeDTO As DTO, Optional UseCaseLink As IService(Of TEntity, TModel).DelUseCase(Of DTO) = Nothing) As IServiceResult(Of TModel) Implements IService(Of TEntity, TModel).Change
             Dim Val As New Services.ServiceResult(Of TModel)
 
             Dim ValDTO As Interfaces.Results.IValidExcept = ToValidation(Of DTO)(ChangeDTO)
