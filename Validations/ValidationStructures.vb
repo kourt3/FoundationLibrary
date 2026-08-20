@@ -1,0 +1,111 @@
+﻿Imports FoundationLibrary.Interfaces.Validation.Structures
+
+Namespace Validation.Structures
+    Public Class ValidString
+        Implements Interfaces.Validation.Structures.IObjectOfString
+
+        Public Property Cases As IObjectOfString.EnumsStringCase Implements IObjectOfString.Cases
+        Public Property MinLength As Integer Implements IObjectOfString.MinLength
+        Public Property MaxLength As Integer Implements IObjectOfString.MaxLength
+        Public Property AvailableWhiteSpace As Boolean Implements IObjectOfString.AvailableWhiteSpace
+        Public Property AvailableNothin As Boolean Implements IObjectOfString.AvailableNothin
+        Public Property ValidNumber As Boolean Implements IObjectOfString.ValidNumber
+        Public Property ValidSymbols As Boolean Implements IObjectOfString.ValidSymbols
+        Public Property ValidStrings As String() Implements IObjectOfString.ValidStrings
+        Public Property ValidChars As Char() Implements IObjectOfString.ValidChars
+        Public Property ExceptionChars As Char() Implements IObjectOfString.ExceptionChars
+
+        Function Check(Str As String, NameObj As String) As Validation.ValMsg.ValMsg
+            Dim Validation As New ValMsg.ValMsg
+
+            If MinLength > Str.Length Then Validation.Exception.Add(New Exceptions.ValidException("Δεν επιτρέπεται το μέγεθος να είναι μικρότερο απο :" & MinLength, NameObj, Str))
+            If MaxLength < Str.Length Then Validation.Exception.Add(New Exceptions.ValidException("Δεν Επιτρέπεται το Μέγεθος να ειναι μεγαλύτερο απο: " & MaxLength, NameObj, Str))
+            If AvailableNothin = True AndAlso Str.Length = 0 Then Validation.Exception.Add(New Exceptions.ValidException("Δεν Επιτρέπεται το πεδιο να είναι χωρίς τιμή.", NameObj, Str))
+            If AvailableWhiteSpace = True AndAlso Str.Contains(" ") Then Validation.Exception.Add(New Exceptions.ValidException("Δεν επιτρέπεται στο πεδιο να υπάρχει κενο.", NameObj, Str))
+
+            If Cases = IObjectOfString.EnumsStringCase.Up AndAlso Str.ToUpper <> Str Then Validation.Exception.Add(New Exceptions.ValidException("Οι Χαρακτήρες δεν ειναι UP", NameObj, Str)) Else
+            If Cases = IObjectOfString.EnumsStringCase.Down AndAlso Str.ToLower <> Str Then Validation.Exception.Add(New Exceptions.ValidException("Οι Χαρακτήρες δεν ειναι Lower", NameObj, Str))
+
+            If ValidNumber = True Then
+                For i = 0 To Str.Length - 1
+                    If Char.IsDigit(Str(i)) AndAlso ExceptionChars.Contains(Str(i)) = False Then Validation.Exception.Add(New Exceptions.ValidException("Δεν μπορει να περιέχει αριθμό.", NameObj, Str))
+                Next
+            End If
+            If ValidSymbols = True Then
+                For i = 0 To Str.Length - 1
+                    If Char.IsSymbol(Str(i)) AndAlso ExceptionChars.Contains(Str(i)) = False Then Validation.Exception.Add(New Exceptions.ValidException("Δεν μπορει να περιέχει Σύμβολο.", NameObj, Str))
+                Next
+            End If
+            If ValidStrings IsNot Nothing AndAlso ValidStrings.Count > 0 Then
+                For i = 0 To ValidStrings.Count - 1
+                    If Str.Contains(ValidStrings(i)) Then Validation.Exception.Add(New Exceptions.ValidException("Δεν επιτρέπονται οι συλαβες." & ValidStrings.ToList.ToString, NameObj, Str))
+                Next
+            End If
+            If ValidChars IsNot Nothing AndAlso ValidChars.Count > 0 Then
+                For i = 0 To ValidChars.Count - 1
+                    If Str.Contains(ValidChars(i)) Then Validation.Exception.Add(New Exceptions.ValidException("Δεν Επιτρέπονται οι Χαρακτήρες." & ValidChars.ToList.ToString, NameObj, Str))
+                Next
+            End If
+
+            If Validation.Exception.Count = 0 Then Validation.Success = True
+
+            Return Validation
+        End Function
+
+    End Class
+
+    Public Class ValidInteger
+        Implements Interfaces.Validation.Structures.IObjectOfInteger
+
+        Public Property StartNumber As Integer? Implements IObjectOfInteger.StartNumber
+        Public Property EndNumber As Integer? Implements IObjectOfInteger.EndNumber
+        Public Property ValidNumberChars As Integer() Implements IObjectOfInteger.ValidNumberChars
+
+        Function Check(Str As Integer, NameObj As String)
+
+
+        End Function
+
+    End Class
+
+    Public Class ValidDouble
+        Implements Interfaces.Validation.Structures.IObjectOfDouble
+
+        Public Property FormatDouble As String Implements IObjectOfDouble.FormatDouble
+        Public Property StartNumber As Double Implements IObjectOfDouble.StartNumber
+        Public Property EndNumber As Double Implements IObjectOfDouble.EndNumber
+        Public Property ValidNumber As Double() Implements IObjectOfDouble.ValidNumber
+
+        Function Check(DStr As Double, NameObj As String)
+
+        End Function
+
+
+    End Class
+
+    Public Class ValidDate
+        Implements Interfaces.Validation.Structures.IObjectOfDate
+
+        Public Property FormatDate As String Implements IObjectOfDate.FormatDate
+        Public Property StarDate As Date? Implements IObjectOfDate.StarDate
+        Public Property EndDate As Date? Implements IObjectOfDate.EndDate
+        Public Property ExceptionsDate As Date() Implements IObjectOfDate.ExceptionsDate
+
+        Function Check(DateStr As Date, NameObj As String)
+
+        End Function
+
+    End Class
+    Public Class ValidBoolean
+        Implements Interfaces.Validation.Structures.IObjectOfBoolean
+
+        Public Property TypeFormatBool As String Implements IObjectOfBoolean.TypeFormatBool
+        Public Property FormatBoolTrue As String Implements IObjectOfBoolean.FormatBoolTrue
+        Public Property FormatBoolFalse As String Implements IObjectOfBoolean.FormatBoolFalse
+
+        Function Check(BoolStr As String, nameObj As String)
+
+        End Function
+    End Class
+
+End Namespace

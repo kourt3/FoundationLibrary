@@ -98,4 +98,12 @@
     Public Interface IHasCreation
         Property Creation As Date
     End Interface
+
+    Public Interface IHasColumnDB(Of T)
+        Property ColumnDB As T
+    End Interface
+
+    Public Interface IHasValueF(Of T)
+        Property ValueF As T
+    End Interface
 End Namespace

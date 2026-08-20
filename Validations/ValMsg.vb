@@ -1,25 +1,15 @@
-﻿Namespace ValMsg
-    Public Class ValMsg(Of IModel)
-        Implements Interfaces.ValMsg.IValMsg(Of IModel)
+﻿Imports FoundationLibrary.Interfaces.Results
+Imports FoundationLibrary.Validation.Exceptions
 
-        Public Property Success As Boolean Implements Interfaces.ValMsg.IValMsg(Of IModel).Success
-        Public Property Msg As String Implements Interfaces.ValMsg.IValMsg(Of IModel).Msg
-        Public Property Model As IModel Implements Interfaces.ValMsg.IValMsg(Of IModel).Model
-
-        Public Overrides Function ToString() As String
-            Return "Success :" & Success & " Msg: " & Msg
-        End Function
-    End Class
-
-
+Namespace Validation.ValMsg
     Public Class ValMsg
-        Implements Interfaces.ValMsg.IValMsg
+        Implements IValidExcept
 
-        Public Property Success As Boolean Implements Interfaces.ValMsg.IValMsg.Success
-        Public Property Msg As String Implements Interfaces.ValMsg.IValMsg.Msg
-
-        Public Overrides Function ToString() As String
-            Return "Success :" & Success & " Msg: " & Msg
-        End Function
+        Public Property Success As Boolean Implements IValidExcept.Success
+        Public Property Exception As List(Of ValidException) Implements IValidExcept.Exception
+        Sub New()
+            Exception = New List(Of ValidException)
+        End Sub
     End Class
+
 End Namespace

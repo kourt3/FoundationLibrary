@@ -1,5 +1,6 @@
 ﻿Imports FoundationLibrary.Interfaces.Keys
 Imports FoundationLibrary.ValueOfObject.Bases
+Imports FoundationLibrary.Interfaces.Validation.Structures
 
 Namespace ValueOfObject
     Friend Class ColumnForDB(Of T)
@@ -22,10 +23,15 @@ Namespace ValueOfObject
     End Class
 
     Public Class ObectOfString
-        Implements ValueOfObject.Bases.IObjectOfString
+        Implements IObjectOfString, IHasColumnDB(Of IColumnsDB(Of String)), IHasValue(Of String)
 
         Private Str As String
-        Public Property ColumnForDB As IColumnsDB(Of String) Implements IObjectOfString.ColumnForDB
+
+        Public Property ColumnForDB As IColumnsDB(Of String) Implements IHasColumnDB(Of IColumnsDB(Of String)).ColumnDB
+        Public Property MinLength As Integer Implements IObjectOfString.MinLength
+        Public Property MaxLength As Integer Implements IObjectOfString.MaxLength
+        Public Property AvailableWhiteSpace As Boolean Implements IObjectOfString.AvailableWhiteSpace
+        Public Property AvailableNothin As Boolean Implements IObjectOfString.AvailableNothin
         Public Property ValidNumber As Boolean Implements IObjectOfString.ValidNumber
         Public Property ValidSymbols As Boolean Implements IObjectOfString.ValidSymbols
         Public Property ValidStrings As String() Implements IObjectOfString.ValidStrings
@@ -97,10 +103,10 @@ Namespace ValueOfObject
     End Class
 
     Public Class ObjectOfInteger
-        Implements ValueOfObject.Bases.IObjectOfInteger
+        Implements IObjectOfInteger, IHasValue(Of Integer), IHasColumnDB(Of IColumnsDB(Of Integer))
 
         Private Str As Integer
-        Public Property ColumnForDB As IColumnsDB(Of Integer) Implements IObjectOfInteger.ColumnForDB
+        Public Property ColumnForDB As IColumnsDB(Of Integer) Implements IHasColumnDB(Of IColumnsDB(Of Integer)).ColumnDB
         Public Property StartNumber As Integer? Implements IObjectOfInteger.StartNumber
         Public Property EndNumber As Integer? Implements IObjectOfInteger.EndNumber
         Public Property ValidNumberChars As Integer() Implements IObjectOfInteger.ValidNumberChars
@@ -135,11 +141,11 @@ Namespace ValueOfObject
     End Class
 
     Public Class OBjectOfDate
-        Implements Bases.IObjectOfDate
+        Implements IObjectOfDate, IHasValue(Of Date), IHasColumnDB(Of IColumnsDB(Of Date)), IHasValueF(Of Date)
 
         Private Str As Date
 
-        Public Property ColumnForDB As IColumnsDB(Of Date) Implements IObjectOfDate.ColumnForDB
+        Public Property ColumnForDB As IColumnsDB(Of Date) Implements IHasColumnDB(Of IColumnsDB(Of Date)).ColumnDB
         Public Property FormatDate As String Implements IObjectOfDate.FormatDate
         Public Property StarDate As Date? Implements IObjectOfDate.StarDate
         Public Property EndDate As Date? Implements IObjectOfDate.EndDate
@@ -162,7 +168,8 @@ Namespace ValueOfObject
                 Str = value
             End Set
         End Property
-        Public Property ValueF As Date Implements IObjectOfDate.ValueF
+
+        Public Property ValueF As Date Implements IHasValueF(Of Date).ValueF
 
         Sub New()
         End Sub
@@ -177,14 +184,14 @@ Namespace ValueOfObject
     End Class
 
     Public Class ObjectOfBoolean
-        Implements Bases.IObjectOfBoolean
+        Implements IObjectOfBoolean, IHasValue(Of Boolean), IHasColumnDB(Of IColumnsDB(Of Boolean)), IHasValueF(Of String)
 
-        Public Property Column As IColumnsDB(Of Boolean) Implements IObjectOfBoolean.Column
+        Public Property Column As IColumnsDB(Of Boolean) Implements IHasColumnDB(Of IColumnsDB(Of Boolean)).ColumnDB
         Public Property TypeFormatBool As String Implements IObjectOfBoolean.TypeFormatBool
         Public Property FormatBoolTrue As String Implements IObjectOfBoolean.FormatBoolTrue
         Public Property FormatBoolFalse As String Implements IObjectOfBoolean.FormatBoolFalse
         Public Property Value As Boolean Implements IHasValue(Of Boolean).Value
-        Public Property ValueF As String Implements IObjectOfBoolean.ValueF
+        Public Property ValueF As String Implements IHasValueF(Of String).ValueF
             Get
                 If Value = True Then
                     Return FormatBoolTrue
@@ -213,15 +220,15 @@ Namespace ValueOfObject
     End Class
 
     Public Class ObjectOfDouble
-        Implements Bases.IObjectOfDouble
+        Implements IObjectOfDouble, IHasValue(Of Double), IHasValueF(Of Double), IHasColumnDB(Of IColumnsDB(Of Double))
 
-        Public Property Column As IColumnsDB(Of Double) Implements IObjectOfDouble.Column
+        Public Property Column As IColumnsDB(Of Double) Implements IHasColumnDB(Of IColumnsDB(Of Double)).ColumnDB
         Public Property FormatDouble As String Implements IObjectOfDouble.FormatDouble
         Public Property StartNumber As Double Implements IObjectOfDouble.StartNumber
         Public Property EndNumber As Double Implements IObjectOfDouble.EndNumber
         Public Property ValidNumber As Double() Implements IObjectOfDouble.ValidNumber
         Public Property Value As Double Implements IHasValue(Of Double).Value
-        Public Property ValueF As Double Implements IObjectOfDouble.ValueF
+        Public Property ValueF As Double Implements IHasValueF(Of Double).ValueF
 
         Sub New()
         End Sub

@@ -79,8 +79,12 @@
   <ItemGroup>
     <Compile Include="Interfaces\IRepository.vb" />
     <Compile Include="Interfaces\IService.vb" />
-    <Compile Include="Interfaces\IValMsg.vb" />
+    <Compile Include="Interfaces\IResults.vb" />
     <Compile Include="Interfaces\Keys.vb" />
+    <Compile Include="Interfaces\IValidStructure.vb" />
+    <Compile Include="Repositories\Result.vb" />
+    <Compile Include="Validations\ValidationStructures.vb" />
+    <Compile Include="Validations\ValidException.vb" />
     <Compile Include="ValueOfObject\IBaseValue.vb" />
     <Compile Include="ValueOfObject\ValueOfObject.vb" />
     <Compile Include="Validations\ValMsg.vb" />
