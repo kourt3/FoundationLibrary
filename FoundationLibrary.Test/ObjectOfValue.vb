@@ -27,6 +27,9 @@ Imports Microsoft.VisualStudio.TestTools.UnitTesting
         Assert.AreEqual(obj.Value, False)
     End Sub
 
-
+    <TestMethod> Public Sub TestError()
+        Dim Err As New FoundationLibrary.Validation.Exceptions.ErrFields("Kourt", "Den egine kala", "malakia")
+        Console.WriteLine(Err)
+    End Sub
 
 End Class

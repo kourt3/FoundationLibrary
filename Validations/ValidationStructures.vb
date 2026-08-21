@@ -15,39 +15,39 @@ Namespace Validation.Structures
         Public Property ValidChars As Char() Implements IObjectOfString.ValidChars
         Public Property ExceptionChars As Char() Implements IObjectOfString.ExceptionChars
 
-        Function Check(Str As String, NameObj As String) As Interfaces.Results.IErrResult(Of List(Of Validation.Exceptions.ValidException))
-            Dim Validation As New List(Of Validation.Exceptions.ValidException)
+        Function Check(Str As String, NameObj As String) As Interfaces.Results.IErrResult(Of List(Of Validation.Exceptions.ErrFields))
+            Dim Validation As New List(Of Validation.Exceptions.ErrFields)
 
-            If MinLength > Str.Length Then Validation.Add(New Exceptions.ValidException("Δεν επιτρέπεται το μέγεθος να είναι μικρότερο απο :" & MinLength, NameObj, Str))
-            If MaxLength < Str.Length Then Validation.Add(New Exceptions.ValidException("Δεν Επιτρέπεται το Μέγεθος να ειναι μεγαλύτερο απο: " & MaxLength, NameObj, Str))
-            If AvailableNothin = True AndAlso Str.Length = 0 Then Validation.Add(New Exceptions.ValidException("Δεν Επιτρέπεται το πεδιο να είναι χωρίς τιμή.", NameObj, Str))
-            If AvailableWhiteSpace = True AndAlso Str.Contains(" ") Then Validation.Add(New Exceptions.ValidException("Δεν επιτρέπεται στο πεδιο να υπάρχει κενο.", NameObj, Str))
+            If MinLength > Str.Length Then Validation.Add(New Exceptions.ErrFields("Δεν επιτρέπεται το μέγεθος να είναι μικρότερο απο :" & MinLength, NameObj, Str))
+            If MaxLength < Str.Length Then Validation.Add(New Exceptions.ErrFields("Δεν Επιτρέπεται το Μέγεθος να ειναι μεγαλύτερο απο: " & MaxLength, NameObj, Str))
+            If AvailableNothin = True AndAlso Str.Length = 0 Then Validation.Add(New Exceptions.ErrFields("Δεν Επιτρέπεται το πεδιο να είναι χωρίς τιμή.", NameObj, Str))
+            If AvailableWhiteSpace = True AndAlso Str.Contains(" ") Then Validation.Add(New Exceptions.ErrFields("Δεν επιτρέπεται στο πεδιο να υπάρχει κενο.", NameObj, Str))
 
-            If Cases = IObjectOfString.EnumsStringCase.Up AndAlso Str.ToUpper <> Str Then Validation.Add(New Exceptions.ValidException("Οι Χαρακτήρες δεν ειναι UP", NameObj, Str)) Else
-            If Cases = IObjectOfString.EnumsStringCase.Down AndAlso Str.ToLower <> Str Then Validation.Add(New Exceptions.ValidException("Οι Χαρακτήρες δεν ειναι Lower", NameObj, Str))
+            If Cases = IObjectOfString.EnumsStringCase.Up AndAlso Str.ToUpper <> Str Then Validation.Add(New Exceptions.ErrFields("Οι Χαρακτήρες δεν ειναι UP", NameObj, Str)) Else
+            If Cases = IObjectOfString.EnumsStringCase.Down AndAlso Str.ToLower <> Str Then Validation.Add(New Exceptions.ErrFields("Οι Χαρακτήρες δεν ειναι Lower", NameObj, Str))
 
             If ValidNumber = True Then
                 For i = 0 To Str.Length - 1
-                    If Char.IsDigit(Str(i)) AndAlso ExceptionChars.Contains(Str(i)) = False Then Validation.Add(New Exceptions.ValidException("Δεν μπορει να περιέχει αριθμό.", NameObj, Str))
+                    If Char.IsDigit(Str(i)) AndAlso ExceptionChars.Contains(Str(i)) = False Then Validation.Add(New Exceptions.ErrFields("Δεν μπορει να περιέχει αριθμό.", NameObj, Str))
                 Next
             End If
             If ValidSymbols = True Then
                 For i = 0 To Str.Length - 1
-                    If Char.IsSymbol(Str(i)) AndAlso ExceptionChars.Contains(Str(i)) = False Then Validation.Add(New Exceptions.ValidException("Δεν μπορει να περιέχει Σύμβολο.", NameObj, Str))
+                    If Char.IsSymbol(Str(i)) AndAlso ExceptionChars.Contains(Str(i)) = False Then Validation.Add(New Exceptions.ErrFields("Δεν μπορει να περιέχει Σύμβολο.", NameObj, Str))
                 Next
             End If
             If ValidStrings IsNot Nothing AndAlso ValidStrings.Count > 0 Then
                 For i = 0 To ValidStrings.Count - 1
-                    If Str.Contains(ValidStrings(i)) Then Validation.Add(New Exceptions.ValidException("Δεν επιτρέπονται οι συλαβες." & ValidStrings.ToList.ToString, NameObj, Str))
+                    If Str.Contains(ValidStrings(i)) Then Validation.Add(New Exceptions.ErrFields("Δεν επιτρέπονται οι συλαβες." & ValidStrings.ToList.ToString, NameObj, Str))
                 Next
             End If
             If ValidChars IsNot Nothing AndAlso ValidChars.Count > 0 Then
                 For i = 0 To ValidChars.Count - 1
-                    If Str.Contains(ValidChars(i)) Then Validation.Add(New Exceptions.ValidException("Δεν Επιτρέπονται οι Χαρακτήρες." & ValidChars.ToList.ToString, NameObj, Str))
+                    If Str.Contains(ValidChars(i)) Then Validation.Add(New Exceptions.ErrFields("Δεν Επιτρέπονται οι Χαρακτήρες." & ValidChars.ToList.ToString, NameObj, Str))
                 Next
             End If
 
-            If Validation.Count = 0 Then Return New Results.ErrResult(Of List(Of Validation.Exceptions.ValidException))(True, "Επιτυχής Πεδιο!", Validation)
+            If Validation.Count = 0 Then Return New Results.ErrResult(Of List(Of Validation.Exceptions.ErrFields))(True, "Επιτυχής Πεδιο!", Validation)
 
             Return Validation
         End Function

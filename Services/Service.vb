@@ -71,21 +71,16 @@ Namespace Services
 
         End Function
         Overridable Function Register(Of DTO)(RegisterDTO As DTO, Optional UseCaseLink As IService(Of TEntity, TModel).DelUseCase(Of DTO) = Nothing) As IResult(Of TModel) Implements IService(Of TEntity, TModel).Register
-
-
             Dim ValDTO As IErrResult(Of List(Of Object)) = ToValidation(Of DTO)(RegisterDTO)
-
             If ValDTO.Success = False Then
                 Return New Results.Result(Of TModel)(False, "Διμιουργήθηκαν εξερέσεις στα πεδια εγραφής!", Nothing)
             End If
-
             If UseCaseLink IsNot Nothing Then
                 Dim ValUseCase As IResult = UseCaseLink.Invoke(RegisterDTO)
                 If ValUseCase.Success = False Then
                     Return New Results.Result(Of TModel)(False, ValUseCase.Msg, Nothing)
                 End If
             End If
-
             Dim Entity As TEntity = ToEntity(RegisterDTO)
             Dim Model As TModel
             If Repository.Create(Entity).Success Then
@@ -112,12 +107,12 @@ Namespace Services
                 End If
             End If
 
-
-
             Dim Entity As TEntity = Repository.ReadKey(Ref.PrimaryKey).Model
             Entity = ToEntity(ChangeDTO, Entity)
-            If Repository.Update(Ref.PrimaryKey, Entity).Success Then
-                Return New Results.Result(Of TModel)(True, "Επιτυχής Αλλαγή!", Nothing) '  Πρεπει να κανω να περναει το Model 
+
+            Dim RepResult As Results.Result(Of TEntity) = Repository.Update(Ref.PrimaryKey, Entity)
+            If RepResult.Success Then
+                Return New Results.Result(Of TModel)(True, "Επιτυχής Αλλαγή!", MemberizeClone(RepResult.Model))
             Else
                 Return New Results.Result(Of TModel)(False, "Αποτηχία Αλλαγής!", Nothing)
             End If
