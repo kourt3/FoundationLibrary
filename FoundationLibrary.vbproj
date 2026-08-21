@@ -82,12 +82,11 @@
     <Compile Include="Interfaces\IResults.vb" />
     <Compile Include="Interfaces\Keys.vb" />
     <Compile Include="Interfaces\IValidStructure.vb" />
-    <Compile Include="Repositories\Result.vb" />
+    <Compile Include="Validations\Result.vb" />
     <Compile Include="Validations\ValidationStructures.vb" />
     <Compile Include="Validations\ValidException.vb" />
     <Compile Include="ValueOfObject\IBaseValue.vb" />
     <Compile Include="ValueOfObject\ValueOfObject.vb" />
-    <Compile Include="Validations\ValMsg.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>

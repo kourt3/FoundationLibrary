@@ -29,7 +29,7 @@ Namespace Services
 
         Public Property Repository As TRepository
 
-        Sub New(RepositoryLink As IRepository(Of TKey, TEntity))
+        Sub New(RepositoryLink As TRepository)
             Repository = RepositoryLink
             AvailableExternalModel = False
         End Sub
@@ -39,7 +39,7 @@ Namespace Services
         Public ReadOnly AvailableExternalModel As Boolean = False
         Public Delegate Function DelMemberizeClone(Entity As TEntity) As TModel
         Public ReadOnly Property ExternalModelMemberizeClone As DelMemberizeClone
-        Sub New(LinkRepository As IRepository(Of TKey, TEntity), ExternalModelofMemeberizeCloneLink As DelMemberizeClone)
+        Sub New(LinkRepository As TRepository, ExternalModelofMemeberizeCloneLink As DelMemberizeClone)
             Repository = LinkRepository
             ExternalModelMemberizeClone = ExternalModelofMemeberizeCloneLink
             AvailableExternalModel = True
@@ -53,140 +53,96 @@ Namespace Services
         ''' <param name="Entity">Data</param>
         ''' <returns>Model</returns>
         MustOverride Function MemberizeClone(Entity As TEntity) As TModel
-        MustOverride Function ToEntity(Of DTO)(DTOLink As DTO, Optional Entity As TEntity = Nothing)
-        MustOverride Function ToValidation(Of DTO)(DTOLink As DTO) As Validation.ValMsg.ValMsg
+        MustOverride Function ToEntity(Of DTO)(DTOLink As DTO, Optional Entity As TEntity = Nothing) As TEntity
+        MustOverride Function ToValidation(Of DTO)(DTOLink As DTO) As IErrResult(Of List(Of Object))
 
-        Overridable Function Exist(Ref As TEntity) As IServiceResult(Of TModel) Implements IService(Of TEntity, TModel).Exist
-            Dim Result As New ServiceResult(Of TModel)
-            Dim Entity As TEntity = Repository.ReadKey(Ref.PrimaryKey)
-
+        Overridable Function Exist(Ref As TEntity) As IResult(Of TModel) Implements IService(Of TEntity, TModel).Exist
+            Dim Entity As TEntity = Repository.ReadKey(Ref.PrimaryKey).Model
+            Dim Model As TModel
             If Entity Is Nothing Then
-                Result.Success = False
-                Result.Msg = "Δεν βρέθηκε η Εγραφή!"
-                Return Result
+                Return New Results.Result(Of TModel)(False, "Δεν βρέθηκε η Εγραφή!", Nothing)
             End If
             If AvailableExternalModel = False Then
-                Result.Model = MemberizeClone(Entity)
+                Model = MemberizeClone(Entity)
             Else
-                Result.Model = ExternalModelMemberizeClone.Invoke(Entity)
+                Model = ExternalModelMemberizeClone.Invoke(Entity)
             End If
-            Result.Success = True
-            Result.Msg = "Βρέθηκε η Εγραφη!"
-            Return Result
-        End Function
-        Overridable Function Register(Of DTO)(RegisterDTO As DTO, Optional UseCaseLink As IService(Of TEntity, TModel).DelUseCase(Of DTO) = Nothing) As IServiceResult(Of TModel) Implements IService(Of TEntity, TModel).Register
-            Dim Val As New ServiceResult(Of TModel)
+            Return New Results.Result(Of TModel)(True, "Βρέθηκε η Εγραφη!", Model)
 
-            Dim ValDTO As Validation.ValMsg.ValMsg = ToValidation(Of DTO)(RegisterDTO)
+        End Function
+        Overridable Function Register(Of DTO)(RegisterDTO As DTO, Optional UseCaseLink As IService(Of TEntity, TModel).DelUseCase(Of DTO) = Nothing) As IResult(Of TModel) Implements IService(Of TEntity, TModel).Register
+
+
+            Dim ValDTO As IErrResult(Of List(Of Object)) = ToValidation(Of DTO)(RegisterDTO)
 
             If ValDTO.Success = False Then
-                Val.Success = False
-                Val.Msg = "Διμιουργήθηκαν εξερέσεις στα πεδια εγραφής!"
-                Val.Exceptions = ValDTO.Exception
-                Return Val
+                Return New Results.Result(Of TModel)(False, "Διμιουργήθηκαν εξερέσεις στα πεδια εγραφής!", Nothing)
             End If
 
             If UseCaseLink IsNot Nothing Then
-                Dim ValUseCase As ICaseResult = UseCaseLink.Invoke(RegisterDTO)
+                Dim ValUseCase As IResult = UseCaseLink.Invoke(RegisterDTO)
                 If ValUseCase.Success = False Then
-                    Val.Success = False
-                    Val.Msg = ValUseCase.Msg
-                    Return Val
+                    Return New Results.Result(Of TModel)(False, ValUseCase.Msg, Nothing)
                 End If
             End If
 
             Dim Entity As TEntity = ToEntity(RegisterDTO)
+            Dim Model As TModel
             If Repository.Create(Entity).Success Then
-                Val.Success = True
-                Val.Msg = "Επιτυχης Εγραφή !"
-
                 If AvailableExternalModel = False Then
-                    Val.Model = MemberizeClone(Entity)
+                    Model = MemberizeClone(Entity)
                 Else
-                    Val.Model = ExternalModelMemberizeClone.Invoke(Entity)
+                    Model = ExternalModelMemberizeClone.Invoke(Entity)
                 End If
-                Return Val
+                Return New Results.Result(Of TModel)(True, "Επιτυχης Εγραφή !", Model)
             Else
-                Val.Success = False
-                Val.Msg = "αποτυχία Εγραφής !"
-                Return Val
+                Return New Results.Result(Of TModel)(False, "αποτυχία Εγραφής !", Nothing)
             End If
         End Function
-        Overridable Function Change(Of DTO)(Ref As TEntity, ChangeDTO As DTO, Optional UseCaseLink As IService(Of TEntity, TModel).DelUseCase(Of DTO) = Nothing) As IServiceResult(Of TModel) Implements IService(Of TEntity, TModel).Change
-            Dim Val As New Services.ServiceResult(Of TModel)
-
-            Dim ValDTO As Interfaces.Results.IValidExcept = ToValidation(Of DTO)(ChangeDTO)
+        Overridable Function Change(Of DTO)(Ref As TEntity, ChangeDTO As DTO, Optional UseCaseLink As IService(Of TEntity, TModel).DelUseCase(Of DTO) = Nothing) As IResult(Of TModel) Implements IService(Of TEntity, TModel).Change
+            Dim ValDTO As Interfaces.Results.IErrResult(Of List(Of Object)) = ToValidation(Of DTO)(ChangeDTO)
             If ValDTO.Success = False Then
-                Val.Success = False
-                Val.Msg = "Διμιουργήθηκαν εξερέσεις στα πεδια!"
-                Val.Exceptions = ValDTO.Exception
-                Return Val
+                Return New Results.Result(Of TModel)(False, "Διμιουργήθηκαν εξερέσεις στα πεδια!", Nothing)
             End If
 
             If UseCaseLink IsNot Nothing Then
-                Dim ValUseCase As ICaseResult = UseCaseLink.Invoke(ChangeDTO)
+                Dim ValUseCase As IResult = UseCaseLink.Invoke(ChangeDTO)
                 If ValUseCase.Success = False Then
-                    Val.Success = False
-                    Val.Msg = ValUseCase.Msg
-                    Return Val
+                    Return New Results.Result(Of TModel)(False, ValUseCase.Msg, Nothing)
                 End If
             End If
 
 
 
-            Dim Entity As TEntity = Repository.ReadKey(Ref.PrimaryKey)
+            Dim Entity As TEntity = Repository.ReadKey(Ref.PrimaryKey).Model
             Entity = ToEntity(ChangeDTO, Entity)
             If Repository.Update(Ref.PrimaryKey, Entity).Success Then
-                Val.Success = True
-                Val.Msg = "Επιτυχής Αλλαγή!"
+                Return New Results.Result(Of TModel)(True, "Επιτυχής Αλλαγή!", Nothing) '  Πρεπει να κανω να περναει το Model 
             Else
-                Val.Success = False
-                Val.Msg = "Αποτηχία Αλλαγής!"
+                Return New Results.Result(Of TModel)(False, "Αποτηχία Αλλαγής!", Nothing)
             End If
-            Return Val
         End Function
 
-        Overridable Function Remove(Ref As TEntity) As IServiceResult(Of TModel) Implements IService(Of TEntity, TModel).Remove
-            Dim Val As New Services.ServiceResult(Of TModel)
+        Overridable Function Remove(Ref As TEntity) As IResult Implements IService(Of TEntity, TModel).Remove
             If Repository.Delete(Ref.PrimaryKey).Success Then
-                Val.Success = True
-                Val.Msg = "Επιτυχής Διαγραφής!"
+                Return New Results.Result(True, "Επιτυχής Διαγραφής!")
             Else
-                Val.Success = False
-                Val.Msg = "Αποτυχία Διαγραφής!"
+                Return New Results.Result(False, "Αποτυχία Διαγραφής!")
             End If
-            Return Val
         End Function
-        Overridable Function Get_All() As IServiceResult(Of List(Of TModel)) Implements IService(Of TEntity, TModel).Get_All
-            Dim Val As New Services.ServiceResult(Of List(Of TModel))
-            Val.Model = New List(Of TModel)
-            For Each Entity In Repository.Read_All.Entity
+        Overridable Function Get_All() As IResult(Of List(Of TModel)) Implements IService(Of TEntity, TModel).Get_All
+            Dim Model As New List(Of TModel)
+            For Each Entity In Repository.Read_All.Model
                 If AvailableExternalModel = False Then
-                    Val.Model.Add(MemberizeClone(Entity))
+                    Model.Add(MemberizeClone(Entity))
                 Else
-                    Val.Model.Add(ExternalModelMemberizeClone.Invoke(Entity))
+                    Model.Add(ExternalModelMemberizeClone.Invoke(Entity))
                 End If
             Next
-            If Val.Model.Count > 0 Then
-                Val.Success = True
-                Val.Msg = "Βρέθηκε Εγραφή!"
-            Else
-                Val.Success = False
-                Val.Msg = "Δεν Βρέθηκε Εγραφή!"
-            End If
-            Return Val
+            If Model.Count > 0 Then Return New Results.Result(Of List(Of TModel))(True, "Βρέθηκε Εγραφή!", Model)
+            Return New Results.Result(Of List(Of TModel))(False, "Δεν Βρέθηκε Εγραφή!", Nothing)
         End Function
 
     End Class
 
-
-    Public Class ServiceResult(Of TModel)
-        Implements Interfaces.Results.IServiceResult(Of TModel)
-
-        Public Property Success As Boolean Implements IServiceResult(Of TModel).Success
-        Public Property Model As TModel Implements IServiceResult(Of TModel).Model
-        Public Property Msg As String Implements IServiceResult(Of TModel).Msg
-        Public Property Exceptions As List(Of ValidException) Implements IServiceResult(Of TModel).Exceptions
-
-    End Class
 End Namespace

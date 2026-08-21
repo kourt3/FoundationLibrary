@@ -1,5 +1,6 @@
 ﻿Imports FoundationLibrary.Interfaces.Keys
 Imports FoundationLibrary.Interfaces.Repository
+Imports FoundationLibrary.Interfaces.Results
 Imports database
 Namespace Repositories
     ''' <summary>
@@ -58,7 +59,7 @@ Again:
             Return PK
         End Function
 
-        Public Function Create(Entity As TEntity) As Boolean Implements IRepository(Of Tkey, TEntity).Create
+        Public Function Create(Entity As TEntity) As IResult(Of TEntity) Implements IRepository(Of Tkey, TEntity).Create
             Dim rnd As New Random
             Dim DT As New DataTable
 Again:
@@ -71,24 +72,20 @@ Again:
                 GoTo Again
             End If
             Database.TableDbOLe(Database.insertDB(Table, Columns, ConvertRows(Entity)))
-            Return True
+            Return New Results.Result(Of TEntity)(True, "Επυτηχης προσθήκη στην Database", Entity)
         End Function
 
-        Public Function Add(Entity As TEntity) As Boolean Implements IRepository(Of Tkey, TEntity).Add
+        Public Function Add(Entity As TEntity) As IResult(Of TEntity) Implements IRepository(Of Tkey, TEntity).Add
             Database.TableDbOLe(Database.insertDB(Table, Columns, ConvertRows(Entity)))
-            Return True
+            Return New Results.Result(Of TEntity)(True, "Επυτηχης προσθήκη στην Database", Entity)
         End Function
 
-        Public Function TryCreate(Entity As TEntity, PK As Tkey) As Boolean Implements IRepository(Of Tkey, TEntity).TryCreate
+        Public Function TryCreate(Entity As TEntity, PK As Tkey) As IResult(Of TEntity) Implements IRepository(Of Tkey, TEntity).TryCreate
             Database.TableDbOLe(Database.insertDB(Table, Columns, ConvertRows(Entity)))
-            Return True
+            Return New Results.Result(Of TEntity)(True, "Επυτηχης προσθήκη στην Database", Entity)
         End Function
 
-        Public Function CreateAndReturnID(Entity As TEntity, ByRef PK As Tkey) As Boolean Implements IRepository(Of Tkey, TEntity).CreateAndReturnID
-            Throw New NotImplementedException()
-        End Function
-
-        Public Function Update(PK As Tkey, Entity As TEntity) As Boolean Implements IRepository(Of Tkey, TEntity).Update
+        Public Function Update(PK As Tkey, Entity As TEntity) As IResult(Of TEntity) Implements IRepository(Of Tkey, TEntity).Update
             Entity.PrimaryKey = PK
             Dim Str As String() = ConvertRows(Entity)
             Dim Str1(Str.Length - 2) As String
@@ -97,10 +94,10 @@ Again:
             Next
             Dim ColumnCopy As String = Columns.Replace("[ID],", Nothing)
             Database.TableDbOLe(Database.updateDB(Table, "[ID]=" & CType(PK, Object), ColumnCopy, Str1))
-            Return True
+            Return New Results.Result(Of TEntity)(True, "Επυτηχης Αλλαγή στην Database", Entity)
         End Function
 
-        Public Function UpdateAt(index As Integer, Entity As TEntity) As Boolean Implements IRepository(Of Tkey, TEntity).UpdateAt
+        Public Function UpdateAt(index As Integer, Entity As TEntity) As IResult(Of TEntity) Implements IRepository(Of Tkey, TEntity).UpdateAt
             Dim DT As New DataTable
             Database.TableDbOLe(Database.SelectDB(Table), DT)
             Dim ID As Integer = DT(index)(0)
@@ -111,35 +108,35 @@ Again:
             Next
             Dim ColumnCopy As String = Columns.Replace("[ID],", Nothing)
             Database.TableDbOLe(Database.updateDB(Table, "[ID]=" & ID, ColumnCopy, Str1))
-            Return True
+            Return New Results.Result(Of TEntity)(True, "Επυτηχης Αλλαγή στην Database", Entity)
         End Function
 
-        Public Function UpdateWhere(Match As Predicate(Of TEntity), Update As Func(Of TEntity, TEntity)) As Boolean Implements IRepository(Of Tkey, TEntity).UpdateWhere
+        Public Function UpdateWhere(Match As Predicate(Of TEntity), Update As Func(Of TEntity, TEntity)) As IResult(Of TEntity) Implements IRepository(Of Tkey, TEntity).UpdateWhere
             Throw New NotImplementedException()
         End Function
 
-        Public Function Delete(Entity As TEntity) As Boolean Implements IRepository(Of Tkey, TEntity).Delete
+        Public Function Delete(Entity As TEntity) As IResult Implements IRepository(Of Tkey, TEntity).Delete
             Throw New NotImplementedException()
         End Function
 
-        Public Function Delete(PK As Tkey) As Boolean Implements IRepository(Of Tkey, TEntity).Delete
+        Public Function Delete(PK As Tkey) As IResult Implements IRepository(Of Tkey, TEntity).Delete
             Database.TableDbOLe(Database.DeleteDB(Table, "[ID]=" & CType(PK, Object)))
-            Return True
+            Return New Results.Result(True, "Επυτηχης Διαγραφή στην Database")
         End Function
 
-        Public Function DeleteAt(Index As Integer) As Boolean Implements IRepository(Of Tkey, TEntity).DeleteAt
+        Public Function DeleteAt(Index As Integer) As IResult Implements IRepository(Of Tkey, TEntity).DeleteAt
             Dim DT As New DataTable
             Database.TableDbOLe(Database.SelectDB(Table), DT)
             Dim ID As Integer = DT(Index)(0)
             Database.TableDbOLe(Database.DeleteDB(Table, "[ID]=" & ID))
-            Return True
+            Return New Results.Result(True, "Επυτηχης Διαγραφή στην Database")
         End Function
 
-        Public Function DeleteWhere(Match As Predicate(Of TEntity)) As Boolean Implements IRepository(Of Tkey, TEntity).DeleteWhere
+        Public Function DeleteWhere(Match As Predicate(Of TEntity)) As IResult Implements IRepository(Of Tkey, TEntity).DeleteWhere
             Throw New NotImplementedException()
         End Function
 
-        Public Function Read_All() As List(Of TEntity) Implements IRepository(Of Tkey, TEntity).Read_All
+        Public Function Read_All() As IResult(Of List(Of TEntity)) Implements IRepository(Of Tkey, TEntity).Read_All
             Dim DT As New DataTable
             Dim ListEntity As New List(Of TEntity)
             Database.TableDbOLe(Database.SelectDB(Table), DT)
@@ -149,7 +146,7 @@ Again:
             Return ListEntity
         End Function
 
-        Public Function Read_Item(PK As Tkey) As TEntity Implements IRepository(Of Tkey, TEntity).Read_Item
+        Public Function ReadKey(PK As Tkey) As IResult(Of TEntity) Implements IRepository(Of Tkey, TEntity).ReadKey
             Dim DT As New DataTable
             Database.TableDbOLe(Database.SelectWhereDB(Table, "[ID]=" & CType(PK, Object)), DT)
             If DT.Rows.Count = 0 Then
@@ -158,22 +155,14 @@ Again:
             Return ConvertEntity(DT(0))
         End Function
 
-        Public Function Read_ItemAt(Index As Integer) As TEntity Implements IRepository(Of Tkey, TEntity).Read_ItemAt
+        Public Function ReadAt(Index As Integer) As IResult(Of TEntity) Implements IRepository(Of Tkey, TEntity).ReadAt
             Dim DT As New DataTable
             Database.TableDbOLe(Database.SelectDB(Table), DT)
             Return ConvertEntity(DT(Index))
         End Function
 
-        Public Function Exist(PK As Tkey) As Boolean Implements IRepository(Of Tkey, TEntity).Exist
-            Dim DT As New DataTable
-            Database.TableDbOLe(Database.SelectWhereDB(Table, "[ID]=" & CType(PK, Object)), DT)
-            If DT.Rows.Count = 0 Then
-                Return False
-            End If
-            Return True
-        End Function
 
-        Public Function Find(Of TCreteria)(Creteria As TCreteria) As TEntity Implements IRepository(Of Tkey, TEntity).Find
+        Public Function Read(Of TCreteria)(Creteria As TCreteria) As IResult(Of TEntity) Implements IRepository(Of Tkey, TEntity).Read
             Dim DT As New DataTable
             Database.TableDbOLe(Database.SelectDB(Table), DT)
             For i = 0 To DT.Rows.Count - 1
@@ -181,7 +170,7 @@ Again:
             Next
         End Function
 
-        Public Function Find(Match As Predicate(Of TEntity)) As TEntity Implements IRepository(Of Tkey, TEntity).Find
+        Public Function Read(Match As Predicate(Of TEntity)) As IResult(Of TEntity) Implements IRepository(Of Tkey, TEntity).Read
             Dim DT As New DataTable
             Database.TableDbOLe(Database.SelectDB(Table), DT)
             For i = 0 To DT.Rows.Count - 1
@@ -189,7 +178,7 @@ Again:
             Next
         End Function
 
-        Public Function Search(Of TCreteria)(Creteria As TCreteria) As List(Of TEntity) Implements IRepository(Of Tkey, TEntity).Search
+        Public Function Search(Of TCreteria)(Creteria As TCreteria) As IResult(Of List(Of TEntity)) Implements IRepository(Of Tkey, TEntity).Search
             Dim Entity As New List(Of TEntity)
             Dim DT As New DataTable
             Database.TableDbOLe(Database.SelectDB(Table), DT)
@@ -201,7 +190,7 @@ Again:
             Return Entity
         End Function
 
-        Public Function Search(Matches As Predicate(Of TEntity)) As List(Of TEntity) Implements IRepository(Of Tkey, TEntity).Search
+        Public Function Search(Matches As Predicate(Of TEntity)) As IResult(Of List(Of TEntity)) Implements IRepository(Of Tkey, TEntity).Search
             Dim Entity As New List(Of TEntity)
             Dim DT As New DataTable
             Database.TableDbOLe(Database.SelectDB(Table), DT)
@@ -213,23 +202,7 @@ Again:
             Return Entity
         End Function
 
-        Public Function Exist(Of TCreteria)(Creteria As TCreteria) As Boolean Implements IRepository(Of Tkey, TEntity).Exist
-            Dim DT As New DataTable
-            Database.TableDbOLe(Database.SelectDB(Table), DT)
-            For i = 0 To DT.Rows.Count - 1
-                If Match(ConvertEntity(DT(i)), Creteria) Then Return True
-            Next
-            Return False
-        End Function
 
-        Public Function Exist(Match As Predicate(Of TEntity)) As Boolean Implements IRepository(Of Tkey, TEntity).Exist
-            Dim DT As New DataTable
-            Database.TableDbOLe(Database.SelectDB(Table), DT)
-            For i = 0 To DT.Rows.Count - 1
-                If Match(ConvertEntity(DT(i))) Then Return True
-            Next
-            Return False
-        End Function
     End Class
 End Namespace
 

@@ -149,19 +149,19 @@ Namespace ValueOfObject
         Public Property FormatDate As String Implements IObjectOfDate.FormatDate
         Public Property StarDate As Date? Implements IObjectOfDate.StarDate
         Public Property EndDate As Date? Implements IObjectOfDate.EndDate
-        Public Property ValidDate As Date() Implements IObjectOfDate.ValidDate
+        Public Property ExceptionsDate As Date() Implements IObjectOfDate.ExceptionsDate
         Public Property Value As Date Implements IHasValue(Of Date).Value
             Get
                 Return Str
             End Get
             Set(value As Date)
                 If value < StarDate Then
-                    If ValidDate.Contains(value) Then
+                    If ExceptionsDate.Contains(value) Then
                         Throw New Exception("Δεν επιτρέπεται η ημερομμηνια να ειναι μικρότερη απο: " & StarDate)
                     End If
                 End If
                 If value > EndDate Then
-                    If ValidDate.Contains(value) Then
+                    If ExceptionsDate.Contains(value) Then
                         Throw New Exception("Δεν επιτρέπεται η ημερομμηνια να ειναι μεγαλύτερη απο: " & EndDate)
                     End If
                 End If

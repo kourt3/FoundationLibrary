@@ -1,27 +1,23 @@
 ﻿Namespace Interfaces.Results
-    Public Interface IValidExcept
-        Property Success As Boolean
-        Property Exception As List(Of FoundationLibrary.Validation.Exceptions.ValidException)
+
+    Public Interface IResult
+        ReadOnly Property Success As Boolean
+        ReadOnly Property Msg As String
     End Interface
 
-
-    Public Interface IServiceResult(Of TModel)
-        Property Success As Boolean
-        Property Model As TModel
-        Property Msg As String
-        Property Exceptions As List(Of FoundationLibrary.Validation.Exceptions.ValidException)
+    Public Interface IResult(Of TModel)
+        Inherits IResult
+        ReadOnly Property Model As TModel
     End Interface
 
-    Public Interface IRepResult(Of TEntity)
-        Property Success As Boolean
-        Property Msg As String
-        Property Entity As TEntity
+    Public Interface IErrResult(Of TError)
+        Inherits IResult
+        ReadOnly Property Err As TError
     End Interface
 
-    Public Interface ICaseResult
-        Property Success As Boolean
-        Property Msg As String
+    Public Interface IErrResult(Of TModel, TError)
+        Inherits IResult(Of TModel)
+        ReadOnly Property Err As TError
     End Interface
 
 End Namespace
-
