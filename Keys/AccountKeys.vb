@@ -1,0 +1,11 @@
+﻿Namespace Keys.Account
+    Public Interface IUserName
+        Property Username As String
+    End Interface
+    Public Interface IPassword
+        Property Password As String
+    End Interface
+    Public Interface ICreateAt
+        Property CreateAt As Date
+    End Interface
+End Namespace

@@ -26,7 +26,6 @@ Namespace Services
         Public Property Repository As TRepository
         Delegate Function DelMemberizeClone(Enity As TEntity) As TModel
 
-
         Sub New(RepositoryLink As IRepository(Of TKey, TEntity))
             Repository = RepositoryLink
 

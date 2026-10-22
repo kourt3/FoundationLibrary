@@ -4,6 +4,9 @@
     Public NotInheritable Class HTMLPACKING
 
         Public packHTML(109) As HTML.Structures.HTMLTAG
+        Public Events = HTML.EventsPacking.Events
+        Public GlobalAttributes = HTML.AttributesPacking.GlobalAttributes
+
         Sub New()
 
 

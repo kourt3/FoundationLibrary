@@ -1,6 +1,13 @@
 ﻿Imports FoundationLibrary.Errors
 Namespace Validation.Types
+    Public Interface ICheckerKey(Of TType)
+        Function Check(Value As TType, Optional NameObj As String = Nothing) As Results.IErrResult(Of List(Of IErrors))
+    End Interface
+
+
     Public Interface IValidString
+        Inherits ICheckerKey(Of String)
+
         Enum EnumsStringCase
             None
             Up
@@ -17,43 +24,48 @@ Namespace Validation.Types
         Property ValidChars As Char()
         Property ExceptionChars As Char()
 
-        Function Check(Str As String, Optional NameObj As String = Nothing) As Results.IErrResult(Of List(Of IErrors))
+
     End Interface
 
     Public Interface IValidInteger
+        Inherits ICheckerKey(Of Integer)
+
         Property StartNumber As Integer?
         Property EndNumber As Integer?
         Property ValidNumberChars As Integer()
 
-        Function Check(Value As Integer, Optional NameObj As String = Nothing) As Results.IErrResult(Of List(Of IErrors))
+
     End Interface
 
     Public Interface IValidDate
+        Inherits ICheckerKey(Of Date)
+
         Property FormatDate As String
         Property StarDate As Date?
         Property EndDate As Date?
         Property ExceptionsDate As Date()
 
-        Function Check(Value As Date, Optional NameObj As String = Nothing) As Results.IErrResult(Of List(Of IErrors))
+
     End Interface
 
 
     Public Interface IValidBoolean
+        Inherits ICheckerKey(Of Boolean)
         Property TypeFormatBool As String
         Property FormatBoolTrue As String
         Property FormatBoolFalse As String
 
-        Function Check(Value As Boolean, Optional NameObj As String = Nothing) As Results.IErrResult(Of List(Of IErrors))
+
     End Interface
 
 
     Public Interface ITypeDouble
+        Inherits ICheckerKey(Of Double)
         Property FormatDouble As String
         Property StartNumber As Double?
         Property EndNumber As Double?
         Property ValidNumber As Double()
 
-        Function Check(Value As Double, Optional NameObj As String = Nothing) As Results.IErrResult(Of List(Of IErrors))
     End Interface
 
 End Namespace

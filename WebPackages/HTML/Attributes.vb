@@ -1,6 +1,6 @@
 ﻿Namespace WebPackages.HTML
     Public NotInheritable Class AttributesPacking
-        Shared ReadOnly GlobalAttributes(13) As HTML.Structures.HTMLATTRIBUTES
+        Public Shared ReadOnly GlobalAttributes(13) As HTML.Structures.HTMLATTRIBUTES
         Sub New()
             ReDim GlobalAttributes(0).values(0)
             ReDim GlobalAttributes(1).values(0)

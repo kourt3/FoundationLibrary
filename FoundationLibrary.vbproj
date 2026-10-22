@@ -74,11 +74,40 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Keys\AccountKeys.vb" />
+    <Compile Include="Keys\AdressesKeys.vb" />
+    <Compile Include="Keys\CardsKeys.vb" />
+    <Compile Include="Keys\ContactKeys.vb" />
+    <Compile Include="Keys\HouseKeys.vb" />
+    <Compile Include="Keys\MathKeys.vb" />
+    <Compile Include="Keys\PersonKeys.vb" />
     <Compile Include="WebPackages\HTML\Attributes.vb" />
     <Compile Include="WebPackages\HTML\Events.vb" />
     <Compile Include="WebPackages\HTML\Structures\HTMLStructures.vb" />
     <Compile Include="WebPackages\HTML\HTML.vb" />
-    <Compile Include="WebPackages\HTML\Tags\*" />
+    <None Include="WebPackages\HTML\Tags\a.txt" />
+    <None Include="WebPackages\HTML\Tags\abbr.txt" />
+    <None Include="WebPackages\HTML\Tags\address.txt" />
+    <None Include="WebPackages\HTML\Tags\area.txt" />
+    <None Include="WebPackages\HTML\Tags\article.txt" />
+    <None Include="WebPackages\HTML\Tags\aside.txt" />
+    <None Include="WebPackages\HTML\Tags\audio.txt" />
+    <None Include="WebPackages\HTML\Tags\b.txt" />
+    <None Include="WebPackages\HTML\Tags\base.txt" />
+    <None Include="WebPackages\HTML\Tags\bdi.txt" />
+    <None Include="WebPackages\HTML\Tags\bdo.txt" />
+    <None Include="WebPackages\HTML\Tags\blockquote.txt" />
+    <None Include="WebPackages\HTML\Tags\body.txt" />
+    <None Include="WebPackages\HTML\Tags\br.txt" />
+    <None Include="WebPackages\HTML\Tags\button.txt" />
+    <None Include="WebPackages\HTML\Tags\canvas.txt" />
+    <None Include="WebPackages\HTML\Tags\caption.txt" />
+    <None Include="WebPackages\HTML\Tags\cite.txt" />
+    <None Include="WebPackages\HTML\Tags\code.txt" />
+    <None Include="WebPackages\HTML\Tags\col.txt" />
+    <None Include="WebPackages\HTML\Tags\doctype.txt" />
+    <None Include="WebPackages\HTML\Tags\dokimastiko.txt" />
+    <None Include="WebPackages\HTML\Tags\Σχολιο.txt" />
     <Compile Include="Queries And Database\Tools\ConnectionStringBuild.vb" />
     <Compile Include="Queries And Database\Tools\ICommands.vb" />
     <Compile Include="Queries And Database\Tools\Modes.vb" />
@@ -155,6 +184,8 @@
     </None>
     <None Include="README.md" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Keys\Economy\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
