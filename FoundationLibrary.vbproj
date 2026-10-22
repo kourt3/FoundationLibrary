@@ -85,6 +85,7 @@
     <Compile Include="WebPackages\HTML\Events.vb" />
     <Compile Include="WebPackages\HTML\Structures\HTMLStructures.vb" />
     <Compile Include="WebPackages\HTML\HTML.vb" />
+    <None Include="Architecture\Architecture.md" />
     <None Include="WebPackages\HTML\Tags\a.txt" />
     <None Include="WebPackages\HTML\Tags\abbr.txt" />
     <None Include="WebPackages\HTML\Tags\address.txt" />
@@ -118,8 +119,8 @@
     <Compile Include="Glossary.vb" />
     <Compile Include="Quiz\QuizController.vb" />
     <Compile Include="Quiz\QuizData.vb" />
-    <Compile Include="Repositories\IRepository.vb" />
-    <Compile Include="Services\IService.vb" />
+    <Compile Include="Architecture\Repositories\IRepository.vb" />
+    <Compile Include="Architecture\Services\IService.vb" />
     <Compile Include="Results\IResults.vb" />
     <Compile Include="Keys\IKeys.vb" />
     <Compile Include="Types\TypeBoolean.vb" />
@@ -153,9 +154,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Repositories\DatabaseRepository.vb" />
-    <Compile Include="Repositories\Repository.vb" />
-    <Compile Include="Services\Service.vb" />
+    <Compile Include="Architecture\Repositories\DatabaseRepository.vb" />
+    <Compile Include="Architecture\Repositories\Repository.vb" />
+    <Compile Include="Architecture\Services\Service.vb" />
     <Compile Include="Validations\ValidInteger.vb" />
     <Compile Include="Validations\ValidString.vb" />
   </ItemGroup>
