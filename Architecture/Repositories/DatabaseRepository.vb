@@ -51,7 +51,7 @@ Namespace Repositories
                 DT.Clear()
                 Randomize()
                 PrimaryKey = CType(rnd.Next, Object)
-                Database.Command(Queries.SelectWhereDB(Table, "[ID]=" & CType(PrimaryKey, Object)), DT)
+                Database.Command(Queries.QSelectWhere(Table, "[ID]=" & CType(PrimaryKey, Object)), DT)
             Loop While DT.Rows.Count > 0
             Return PrimaryKey
         End Function
@@ -61,17 +61,17 @@ Namespace Repositories
             Dim DT As New DataTable
 
             Entity.PrimaryKey = GeneredID()
-            Database.Command(Queries.QInstert(Table, Columns, ConvertRows(Entity)))
+            Database.Command(Queries.QInsert(Table, Columns, ConvertRows(Entity)))
             Return New Results.Result(Of TEntity)(True, "Επυτηχης προσθήκη στην Database", Entity)
         End Function
 
         Public Function Add(Entity As TEntity) As IResult(Of TEntity) Implements IRepository(Of Tkey, TEntity).Add
-            Database.Command(Queries.QInstert(Table, Columns, ConvertRows(Entity)))
+            Database.Command(Queries.QInsert(Table, Columns, ConvertRows(Entity)))
             Return New Results.Result(Of TEntity)(True, "Επυτηχης προσθήκη στην Database", Entity)
         End Function
 
         Public Function TryCreate(Entity As TEntity, PK As Tkey) As IResult(Of TEntity) Implements IRepository(Of Tkey, TEntity).TryCreate
-            Database.Command(Queries.QInstert(Table, Columns, ConvertRows(Entity)))
+            Database.Command(Queries.QInsert(Table, Columns, ConvertRows(Entity)))
             Return New Results.Result(Of TEntity)(True, "Επυτηχης προσθήκη στην Database", Entity)
         End Function
 
@@ -83,7 +83,7 @@ Namespace Repositories
                 Str1(i - 1) = Str(i)
             Next
             Dim ColumnCopy As String = Columns.Replace("[ID],", Nothing)
-            Database.Command(Queries.updateDB(Table, "[ID]=" & CType(PK, Object), ColumnCopy, Str1))
+            Database.Command(Queries.QUpdate(Table, "[ID]=" & CType(PK, Object), ColumnCopy, Str1))
             Return New Results.Result(Of TEntity)(True, "Επυτηχης Αλλαγή στην Database", Entity)
         End Function
 
@@ -97,7 +97,7 @@ Namespace Repositories
                 Str1(i - 1) = Str(i)
             Next
             Dim ColumnCopy As String = Columns.Replace("[ID],", Nothing)
-            Database.Command(Queries.updateDB(Table, "[ID]=" & ID, ColumnCopy, Str1))
+            Database.Command(Queries.QUpdate(Table, "[ID]=" & ID, ColumnCopy, Str1))
             Return New Results.Result(Of TEntity)(True, "Επυτηχης Αλλαγή στην Database", Entity)
         End Function
 
@@ -110,7 +110,7 @@ Namespace Repositories
         End Function
 
         Public Function Delete(PK As Tkey) As IResult Implements IRepository(Of Tkey, TEntity).Delete
-            Database.Command(Queries.SelectWhereDB(Table, "[ID]=" & CType(PK, Object)))
+            Database.Command(Queries.QSelectWhere(Table, "[ID]=" & CType(PK, Object)))
             Return New Results.Result(True, "Επυτηχης Διαγραφή στην Database")
         End Function
 
@@ -138,7 +138,7 @@ Namespace Repositories
 
         Public Function ReadKey(PK As Tkey) As IResult(Of TEntity) Implements IRepository(Of Tkey, TEntity).ReadKey
             Dim DT As New DataTable
-            Database.Command(Queries.SelectWhereDB(Table, "[ID]=" & CType(PK, Object)), DT)
+            Database.Command(Queries.QSelectWhere(Table, "[ID]=" & CType(PK, Object)), DT)
             If DT.Rows.Count = 0 Then
                 Return Nothing
             End If

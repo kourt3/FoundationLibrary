@@ -9,6 +9,7 @@ Namespace Database
         Sub New(Provider As Providers.TypeProviders, DataSourse As String)
             con = New OleDb.OleDbConnection("Provider=" & New Providers(Provider) & ";Data Source=" & DataSourse & ";")
         End Sub
+
         Sub New(Provider As String, DataSource As String)
             con = New OleDb.OleDbConnection("Provider=" & Provider & ";Data Source=" & DataSource & ";")
         End Sub

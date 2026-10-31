@@ -7,7 +7,7 @@
             ACE16
         End Enum
 
-        Private _Value As String
+        Private _Value As String = Nothing
 
         Private Shared Property ProvidersDictionary As New Dictionary(Of Integer, String) From {
             {TypeProviders.Jet4, "Microsoft.Jet.OLEDB.4.0"},
@@ -45,10 +45,10 @@
             Return New Providers(Value)
         End Operator
         Shared Operator &(ByVal Provider As Providers, Value As String) As String
-            Return Provider._Value
+            Return Provider._Value + Value
         End Operator
         Shared Operator &(Value As String, ByVal Provider As Providers) As String
-            Return Provider._Value
+            Return Value + Provider._Value
         End Operator
 
 
