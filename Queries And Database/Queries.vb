@@ -54,7 +54,33 @@
             Return "UPDATE " & bash & " SET " & times & " WHERE " & thesh & ";"
         End Function
 
-
+        Function QUpdate(bash As String, colnames() As String, thmes() As String) As String
+            Dim times As String = Nothing
+            For i = 0 To colnames.Count - 1
+                times += colnames(i)
+                times += " ='"
+                times += thmes(i)
+                times += "'"
+                If Not i = colnames.Count - 1 Then
+                    times += ","
+                End If
+            Next
+            Return "UPDATE " & bash & " SET " & times & ";"
+        End Function
+        Function QUpdate(bash As String, colnames As String, thmes() As String) As String
+            Dim times As String = Nothing
+            Dim col() As String = Split(colnames, ",")
+            For i = 0 To col.Count - 1
+                times += col(i)
+                times += " ='"
+                times += thmes(i)
+                times += "'"
+                If Not i = col.Count - 1 Then
+                    times += ","
+                End If
+            Next
+            Return "UPDATE " & bash & " SET " & times & ";"
+        End Function
         Function QUpdate(bash As String, thesh As String, colnames As String, thmes() As String) As String
             Dim times As String = Nothing
             Dim col() As String = Split(colnames, ",")

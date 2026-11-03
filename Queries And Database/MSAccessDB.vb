@@ -19,12 +19,23 @@ Namespace Database
         Sub New(ConnectionBuild As String)
             con = New OleDb.OleDbConnection(ConnectionBuild)
         End Sub
-
         Sub Command(Query As String) Implements ICommands.Command
             con.Open()
             cmd.Connection = con
             cmd.CommandText = Query
             cmd.ExecuteNonQuery()
+            con.Close()
+        End Sub
+        Sub Command(Query As String, ByRef ID As Integer)
+            con.Open()
+            cmd.Connection = con
+            cmd.CommandText = Query
+            da.SelectCommand = cmd
+            cmd.ExecuteNonQuery()
+            cmd.CommandText = "SELECT @@IDENTITY;"
+            da.SelectCommand = cmd
+            cmd.ExecuteNonQuery()
+            ID = Convert.ToInt32(cmd.ExecuteScalar)
             con.Close()
         End Sub
         Sub Command(Query As String, ByRef dt As DataTable) Implements ICommands.Command
