@@ -1,7 +1,7 @@
-﻿Imports FoundationLibrary.Results
-Imports FoundationLibrary.Types.Interfaces
-Imports FoundationLibrary.Errors
-Imports FoundationLibrary.Validation.Types
+﻿Imports MyBook.Results
+Imports MyBook.Types.Interfaces
+Imports MyBook.Errors
+Imports MyBook.Validation.Types
 Namespace Validation.Types
     Public Structure ValidString
         Implements Validation.Types.IValidString

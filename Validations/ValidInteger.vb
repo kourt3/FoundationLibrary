@@ -1,5 +1,5 @@
-﻿Imports FoundationLibrary.Results
-Imports FoundationLibrary.Errors
+﻿Imports MyBook.Results
+Imports MyBook.Errors
 
 Namespace Validation.Types
     Public Structure ValidInteger

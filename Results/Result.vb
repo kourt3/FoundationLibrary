@@ -1,4 +1,4 @@
-﻿Imports FoundationLibrary.Results
+﻿Imports MyBook.Results
 
 Namespace Results
     Public Class Result

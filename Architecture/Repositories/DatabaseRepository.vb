@@ -1,7 +1,7 @@
-﻿Imports FoundationLibrary.Keys
-Imports FoundationLibrary.Repositories
-Imports FoundationLibrary.Results
-Imports FoundationLibrary.Database
+﻿Imports MyBook.Keys
+Imports MyBook.Repositories
+Imports MyBook.Results
+Imports MyBook.Database
 
 
 

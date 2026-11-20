@@ -1,4 +1,4 @@
-﻿Imports FoundationLibrary.Errors
+﻿Imports MyBook.Errors
 Namespace Validation.Types
     Public Interface ICheckerKey(Of TType)
         Function Check(Value As TType, Optional NameObj As String = Nothing) As Results.IErrResult(Of List(Of IErrors))

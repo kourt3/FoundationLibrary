@@ -1,5 +1,5 @@
-﻿Imports FoundationLibrary.Keys
-Imports FoundationLibrary.Repositories
+﻿Imports MyBook.Keys
+Imports MyBook.Repositories
 
 Namespace Repositories
     ''' <summary>

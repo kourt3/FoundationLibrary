@@ -1,6 +1,6 @@
-﻿Imports FoundationLibrary.Keys
-Imports FoundationLibrary.Types.Interfaces
-Imports FoundationLibrary.Validation.Types
+﻿Imports MyBook.Keys
+Imports MyBook.Types.Interfaces
+Imports MyBook.Validation.Types
 
 Namespace Types
     Public Class TypeString

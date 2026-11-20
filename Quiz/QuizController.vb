@@ -1,4 +1,4 @@
-﻿Imports FoundationLibrary.Quiz.Data
+﻿Imports MyBook.Quiz.Data
 Namespace Quiz
 
 

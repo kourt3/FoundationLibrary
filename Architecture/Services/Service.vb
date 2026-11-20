@@ -1,6 +1,6 @@
-﻿Imports FoundationLibrary.Repositories
-Imports FoundationLibrary.Keys
-Imports FoundationLibrary.Results
+﻿Imports MyBook.Repositories
+Imports MyBook.Keys
+Imports MyBook.Results
 Namespace Services
     ''' <summary>
     ''' <Title>

@@ -1,5 +1,5 @@
-﻿Imports FoundationLibrary.Keys
-Imports FoundationLibrary.Results
+﻿Imports MyBook.Keys
+Imports MyBook.Results
 Namespace Services
     ''' <summary>
     ''' Τα βασικά κλειδια που θα χρειαστεις για να διμιουργήσεις Service

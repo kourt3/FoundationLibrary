@@ -1,4 +1,4 @@
-﻿Imports FoundationLibrary.Keys
+﻿Imports MyBook.Keys
 
 Namespace Repositories
     ''' <summary>

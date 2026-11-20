@@ -1,5 +1,5 @@
 ﻿Imports System.Runtime.CompilerServices
-Imports FoundationLibrary.Types
+Imports MyBook.Types
 
 
 Namespace Extensions
