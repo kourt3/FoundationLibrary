@@ -1,4 +1,6 @@
-﻿Namespace Database.Queries
+﻿Imports System.Security.Policy
+Imports System.Runtime.CompilerServices
+Namespace Database.Queries
     Public Module Queries
         Function QInsert(Bash As String, Columns As String, Thmes() As String) As String
             Dim times As String = Nothing
@@ -33,11 +35,39 @@
 
             Return "INSERT INTO " & bash & " (" & Col & ") VALUES ('" & times & "');"
         End Function
+        <Extension>
+        Function QInsert(ByVal ComandParameters As Tools.Command) As String
+            Dim Col As String = Nothing
+            Dim Times As String = Nothing
+
+            For i = 0 To ComandParameters.DataRows.Count - 1
+                Col += ComandParameters.DataRows(i).Column
+                Times += ComandParameters.DataRows(i).Value
+                If Not i = ComandParameters.DataRows.Count - 1 Then
+                    Times += "','"
+                    Col += ","
+                End If
+            Next
+
+            Return "INSERT INTO " & ComandParameters.Bash & " (" & Col & ") VALUES ('" & Times & "');"
+        End Function
         Function QSelect(bash As String) As String
             Return "SELECT * FROM " & bash & ";"
         End Function
         Function QSelectWhere(bash As String, thesh As String) As String
-            Return "SELECT * FROM " & bash & " WHERE " & thesh
+            Return "SELECT * FROM " & bash & " WHERE " & thesh & ";"
+        End Function
+        <Extension>
+        Function QSelect(CommandParameter As Tools.Command) As String
+            If CommandParameter.Thesh = Nothing Then
+                Return "SELECT * FROM " & CommandParameter.Bash & ";"
+            Else
+                Return "SELECT * FROM " & CommandParameter.Bash & " WHERE " & CommandParameter.Thesh & ";"
+            End If
+        End Function
+
+        Function QSelect(Bash As String, OrderBy As String)
+            Return "SELECT * FROM " & Bash & vbNewLine & "ORDER BY " & OrderBy & ";"
         End Function
 
         Function QUpdate(bash As String, thesh As String, colnames() As String, thmes() As String) As String
@@ -95,11 +125,41 @@
             Next
             Return "UPDATE " & bash & " SET " & times & " WHERE " & thesh & ";"
         End Function
+        <Extension>
+        Function QUpdate(CommandParameter As Tools.Command) As String
+            Dim Col As String = Nothing
+            Dim Times As String = Nothing
+            Dim Str As String = Nothing
+
+            For i = 0 To CommandParameter.DataRows.Count - 1
+                Str += CommandParameter.DataRows(i).Column
+                Str += "='"
+                Str += CommandParameter.DataRows(i).Value
+                Str += "'"
+                If Not i = CommandParameter.DataRows.Count - 1 Then
+                    Str += ","
+                End If
+            Next
+            Return "UPDATE " & CommandParameter.Bash & " SET " & Str & " WHERE " & CommandParameter.Thesh & ";"
+        End Function
+
+
         Function QDelete(bash As String, thesh As String) As String
             Return "DELETE FROM " & bash & " WHERE " & thesh
         End Function
         Function QDelete(bash As String) As String
             Return "DELETE FROM " & bash & ";"
         End Function
+        <Extension>
+        Function QDelete(CommandParameter As Tools.Command) As String
+            If CommandParameter.Thesh = Nothing Then
+                Return "DELETE FROM " & CommandParameter.Bash & ";"
+            Else
+                Return "DELETE FROM " & CommandParameter.Bash & " WHERE " & CommandParameter.Thesh
+            End If
+        End Function
+
     End Module
+
+
 End Namespace

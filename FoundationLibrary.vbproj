@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{FE63A7AA-9DFA-40CA-9C23-ABB9C444881D}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>FoundationLibrary</RootNamespace>
-    <AssemblyName>FoundationLibrary</AssemblyName>
+    <RootNamespace>MyBook</RootNamespace>
+    <AssemblyName>MyBook</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Windows</MyType>
     <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
@@ -20,7 +20,7 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>FoundationLibrary.xml</DocumentationFile>
+    <DocumentationFile>MyBook.xml</DocumentationFile>
     <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</NoWarn>
     <PreferNativeArm64>false</PreferNativeArm64>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -33,7 +33,7 @@
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>FoundationLibrary.xml</DocumentationFile>
+    <DocumentationFile>MyBook.xml</DocumentationFile>
     <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</NoWarn>
     <WarningsAsErrors>
     </WarningsAsErrors>
@@ -81,8 +81,14 @@
     <Compile Include="Keys\HouseKeys.vb" />
     <Compile Include="Keys\MathKeys.vb" />
     <Compile Include="Keys\PersonKeys.vb" />
+    <Compile Include="Queries And Database\Tools\Commands\Commands.vb" />
     <Compile Include="WebPackages\HTML\Attributes.vb" />
     <Compile Include="WebPackages\HTML\Events.vb" />
+    <Compile Include="WebPackages\HTML\HTML.Designer.vb">
+      <DependentUpon>HTML.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="WebPackages\HTML\Structures\HTMLStructures.vb" />
     <Compile Include="WebPackages\HTML\HTML.vb" />
     <None Include="Architecture\Architecture.md" />
@@ -171,6 +177,7 @@
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
+      <LastGenOutput>HTML.Designer.vb</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
